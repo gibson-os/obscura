@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Dto;
 
-class Scanner
+use JsonSerializable;
+
+class Scanner implements JsonSerializable
 {
     public function __construct(
         private readonly string $deviceName,
@@ -37,5 +39,16 @@ class Scanner
     public function getIndex(): int
     {
         return $this->index;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'deviceName' => $this->getDeviceName(),
+            'vendor' => $this->getVendor(),
+            'model' => $this->getModel(),
+            'type' => $this->getType(),
+            'index' => $this->getIndex(),
+        ];
     }
 }

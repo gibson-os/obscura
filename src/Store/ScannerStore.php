@@ -49,22 +49,29 @@ class ScannerStore extends AbstractStore
 
         $this->list = [];
 
-        $output = $this->processService->execute(sprintf(
+        $scanImageProcess = $this->processService->open(sprintf(
             '%s --formatted-device-list="%s"',
             $this->scanImagePath,
             '%d;%v;%m;%t;%i%n',
-        ));
-        $lines = explode(PHP_EOL, $output);
+        ), 'r');
 
-        foreach ($lines as $line) {
+        while ($line = fgets($scanImageProcess)) {
+            $scanner = explode(';', $line);
+
+            if (count($scanner) !== 5) {
+                continue;
+            }
+
             $this->list[] = new Scanner(
-                $line[0],
-                $line[1],
-                $line[2],
-                $line[3],
-                (int) $line[4],
+                $scanner[0],
+                $scanner[1],
+                $scanner[2],
+                $scanner[3],
+                (int) $scanner[4],
             );
         }
+
+        $this->processService->close($scanImageProcess);
 
         return $this->list;
     }
