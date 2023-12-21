@@ -75,7 +75,7 @@ class OptionStore extends AbstractStore
             $line = str_replace('[=(', ' ', $line);
             $line = str_replace(')]', '', $line);
 
-            if (preg_match('/^--?([\w-]*)\s([^\s]*)\s\[([^]]*)\]/', $line, $hits) === false) {
+            if (preg_match('/^--?([\w-]*)\s([^\s]*)\s\[([^]]*)\]/', $line, $hits) === 0) {
                 $optionDescription .= $line . ' ';
 
                 continue;
