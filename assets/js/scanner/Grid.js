@@ -27,8 +27,19 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
 
         me.callParent(arguments);
     },
-    enterFunction(master) {
-        // new GibsonOS.module.hc.master.App({master: master.getData()});
+    enterFunction(record) {
+        const formWindow = new GibsonOS.module.core.component.form.Window({
+            title: 'Scannen',
+            url: baseDir + 'obscura/scanner/form',
+            method: 'GET',
+            params: {
+                deviceName: record.get('deviceName')
+            }
+        }).show();
+
+        formWindow.down('form').getForm().on('actioncomplete', () => {
+            formWindow.close();
+        });
     },
     getColumns() {
         return [{
