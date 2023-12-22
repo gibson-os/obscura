@@ -64,7 +64,8 @@ class OptionStore extends AbstractStore
             escapeshellarg($this->deviceName),
         ), 'r');
 
-        $optionName = null;
+        $optionArgument = null;
+        $optionName = '';
         $optionPossibleValues = '';
         $optionDefault = '';
         $optionDescription = '';
@@ -74,14 +75,15 @@ class OptionStore extends AbstractStore
             $line = str_replace('[=(', ' ', $line);
             $line = str_replace(')]', '', $line);
 
-            if (preg_match('/^--?([\w-]*)\s([^\s]*)\s\[([^]]*)\]/', $line, $hits) === 0) {
+            if (preg_match('/^(--?([\w-]*))\s([^\s]*)\s\[([^]]*)\]/', $line, $hits) === 0) {
                 $optionDescription .= $line . ' ';
 
                 continue;
             }
 
-            if ($optionName !== null) {
+            if ($optionArgument !== null) {
                 $this->list[] = new Option(
+                    $optionArgument,
                     $optionName,
                     trim($optionDescription),
                     $optionDefault,
@@ -89,14 +91,16 @@ class OptionStore extends AbstractStore
                 );
             }
 
-            $optionName = $hits[1];
-            $optionPossibleValues = $hits[2];
-            $optionDefault = $hits[3];
+            $optionArgument = $hits[1];
+            $optionName = $hits[2];
+            $optionPossibleValues = $hits[3];
+            $optionDefault = $hits[4];
             $optionDescription = '';
         }
 
-        if ($optionName !== null) {
+        if ($optionArgument !== null) {
             $this->list[] = new Option(
+                $optionArgument,
                 $optionName,
                 $optionDescription,
                 $optionDefault,

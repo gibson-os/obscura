@@ -5,11 +5,13 @@ namespace GibsonOS\Module\Obscura\Form;
 
 use GibsonOS\Core\Dto\Form\Button;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
+use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Form\AbstractForm;
 use GibsonOS\Core\Mapper\ModelMapper;
+use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Obscura\Dto\Option\EnumValue;
 use GibsonOS\Module\Obscura\Dto\Option\RangeValue;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
@@ -41,7 +43,10 @@ class OptionsForm extends AbstractForm
      */
     protected function getFields(): array
     {
-        $fields = [];
+        $fields = [
+            'path' => new DirectoryParameter(),
+            'duplex' => new BoolParameter('Duplex'),
+        ];
         $options = $this->optionStore
             ->setDeviceName($this->deviceName)
             ->getList()
@@ -49,12 +54,21 @@ class OptionsForm extends AbstractForm
 
         foreach ($options as $option) {
             $name = $option->getName();
+            $allowedValues = $option->getValue()->getAllowedValues();
             $field = match ($option->getValue()::class) {
-                EnumValue::class => new OptionParameter($name, $option->getValue()->getAllowedValues()),
-                RangeValue::class => new StringParameter($name),
+                EnumValue::class => new OptionParameter($name, $allowedValues),
+                RangeValue::class => new StringParameter(sprintf(
+                    '%s (%s..%s)',
+                    $name,
+                    $allowedValues['from'],
+                    $allowedValues['to'],
+                )),
             };
-            $field->setValue($option->getDefault());
-            $fields[$name] = $field;
+            $field
+                ->setValue($option->getDefault())
+                ->setSubText($option->getDescription())
+            ;
+            $fields[sprintf('options[%s]', $name)] = $field;
         }
 
         return $fields;
@@ -70,7 +84,7 @@ class OptionsForm extends AbstractForm
 
         return [
             'fields' => $fields,
-            'buttons' => ['scan' => new Button('Scan', 'obscura', 'scanner', 'scan')],
+            'buttons' => ['scan' => new Button('Scan', 'obscura', 'scanner', 'scan', ['deviceName' => $this->deviceName])],
         ];
     }
 

@@ -16,11 +16,6 @@ class RangeValue implements Value
         return $value >= $this->from && $value <= $this->to;
     }
 
-    public function getDescription(): string
-    {
-        return sprintf('%d..%d', $this->from, $this->to);
-    }
-
     public function getAllowedValues(): array
     {
         return [

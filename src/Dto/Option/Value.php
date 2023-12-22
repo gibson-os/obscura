@@ -7,7 +7,5 @@ interface Value
 {
     public function isValid(mixed $value): bool;
 
-    public function getDescription(): string;
-
     public function getAllowedValues(): array;
 }

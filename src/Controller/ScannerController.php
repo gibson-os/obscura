@@ -10,6 +10,7 @@ use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Form\OptionsForm;
+use GibsonOS\Module\Obscura\Service\ScannerService;
 
 class ScannerController extends AbstractController
 {
@@ -25,5 +26,27 @@ class ScannerController extends AbstractController
         $optionsForm->setDeviceName($deviceName);
 
         return $this->returnSuccess($optionsForm->getForm());
+    }
+
+    /**
+     * @throws OptionValueException
+     * @throws ProcessError
+     */
+    #[CheckPermission([Permission::WRITE])]
+    public function postScan(
+        ScannerService $scannerService,
+        string $deviceName,
+        string $path,
+        bool $duplex,
+        array $options,
+    ): AjaxResponse {
+        $scannerService->scan(
+            $deviceName,
+            $path,
+            $duplex,
+            $options,
+        );
+
+        return $this->returnSuccess();
     }
 }

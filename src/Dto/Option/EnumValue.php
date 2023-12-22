@@ -14,11 +14,6 @@ class EnumValue implements Value
         return in_array($value, $this->allowedValues);
     }
 
-    public function getDescription(): string
-    {
-        return implode('|', $this->allowedValues);
-    }
-
     public function getAllowedValues(): array
     {
         return $this->allowedValues;
