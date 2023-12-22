@@ -9,31 +9,21 @@ use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
-use GibsonOS\Module\Obscura\Store\OptionStore;
-use GibsonOS\Module\Obscura\Store\ScannerStore;
+use GibsonOS\Module\Obscura\Form\OptionsForm;
 
 class ScannerController extends AbstractController
 {
     /**
      * @throws ProcessError
-     */
-    #[CheckPermission([Permission::READ])]
-    public function get(ScannerStore $scannerStore): AjaxResponse
-    {
-        return $this->returnSuccess($scannerStore->getList(), $scannerStore->getCount());
-    }
-
-    /**
-     * @throws ProcessError
      * @throws OptionValueException
      */
     #[CheckPermission([Permission::READ])]
-    public function getOptions(
-        OptionStore $optionStore,
+    public function getForm(
+        OptionsForm $optionsForm,
         string $deviceName,
     ): AjaxResponse {
-        $optionStore->setDeviceName($deviceName);
+        $optionsForm->setDeviceName($deviceName);
 
-        return $this->returnSuccess($optionStore->getList(), $optionStore->getCount());
+        return $this->returnSuccess($optionsForm->getForm());
     }
 }

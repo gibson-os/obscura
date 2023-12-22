@@ -1,13 +1,13 @@
-Ext.define('GibsonOS.module.obscura.scanner.App', {
+Ext.define('GibsonOS.module.obscura.index.App', {
     extend: 'GibsonOS.App',
-    alias: ['widget.gosModuleObscuraScannerApp'],
+    alias: ['widget.gosModuleObscuraIndexApp'],
     title: 'Scanner',
     appIcon: 'icon_scan',
     width: 600,
     height: 400,
     requiredPermission: {
         module: 'obscura',
-        task: 'scanner'
+        task: 'index'
     },
     initComponent() {
         const me = this;

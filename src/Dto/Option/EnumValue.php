@@ -18,4 +18,9 @@ class EnumValue implements Value
     {
         return implode('|', $this->allowedValues);
     }
+
+    public function getAllowedValues(): array
+    {
+        return $this->allowedValues;
+    }
 }

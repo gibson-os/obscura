@@ -5,7 +5,7 @@ Ext.define('GibsonOS.module.obscura.store.Scanner', {
     pageSize: 100,
     proxy: {
         type: 'gosDataProxyAjax',
-        url: baseDir + 'obscura/scanner',
+        url: baseDir + 'obscura/index/scanner',
         method: 'GET'
     },
     model: 'GibsonOS.module.obscura.model.Scanner'

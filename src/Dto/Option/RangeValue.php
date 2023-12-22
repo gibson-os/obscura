@@ -9,7 +9,6 @@ class RangeValue implements Value
         private readonly int|float $from,
         private readonly int|float $to,
     ) {
-
     }
 
     public function isValid(mixed $value): bool
@@ -20,5 +19,13 @@ class RangeValue implements Value
     public function getDescription(): string
     {
         return sprintf('%d..%d', $this->from, $this->to);
+    }
+
+    public function getAllowedValues(): array
+    {
+        return [
+            'from' => $this->from,
+            'to' => $this->to,
+        ];
     }
 }

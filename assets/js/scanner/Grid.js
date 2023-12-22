@@ -11,7 +11,7 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
                 id: null,
                 module: 'obscura',
                 task: 'scanner',
-                action: 'view',
+                action: '',
                 text: record.get('deviceName'),
                 icon: 'icon_scan',
                 parameters: record.getData()

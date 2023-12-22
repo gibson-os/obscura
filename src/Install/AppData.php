@@ -27,7 +27,7 @@ class AppData extends AbstractInstall implements PriorityInterface
      */
     public function install(string $module): Generator
     {
-        $this->addApp('Obscura', 'obscura', 'scanner', 'index', 'icon_scan');
+        $this->addApp('Obscura', 'obscura', 'index', 'index', 'icon_scan');
 
         yield new Success('Obscura apps installed!');
     }

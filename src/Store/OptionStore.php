@@ -11,7 +11,6 @@ use GibsonOS\Module\Obscura\Dto\Option;
 use GibsonOS\Module\Obscura\Dto\Option\EnumValue;
 use GibsonOS\Module\Obscura\Dto\Option\RangeValue;
 use GibsonOS\Module\Obscura\Dto\Option\Value;
-use GibsonOS\Module\Obscura\Dto\Scanner;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 
 class OptionStore extends AbstractStore
@@ -31,7 +30,7 @@ class OptionStore extends AbstractStore
      * @throws OptionValueException
      * @throws ProcessError
      *
-     * @return Scanner[]
+     * @return Option[]
      */
     public function getList(): array
     {
@@ -110,9 +109,11 @@ class OptionStore extends AbstractStore
         return $this->list;
     }
 
-    public function setDeviceName(string $deviceName): void
+    public function setDeviceName(string $deviceName): OptionStore
     {
         $this->deviceName = $deviceName;
+
+        return $this;
     }
 
     private function getOptionValue(string $possibleValues): Value
