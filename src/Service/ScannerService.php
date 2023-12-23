@@ -13,7 +13,7 @@ use GibsonOS\Module\Obscura\Processor\ScanProcessor;
 class ScannerService
 {
     public function __construct(
-        #[GetServices(['obscura/src/Process'], ScanProcessor::class)]
+        #[GetServices(['obscura/src/Processor'], ScanProcessor::class)]
         private readonly array $scanProcessors,
     ) {
     }

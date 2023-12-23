@@ -68,7 +68,7 @@ class OptionsForm extends AbstractForm
             $name = $option->getName();
             $allowedValues = $option->getValue()->getAllowedValues();
             $field = match ($option->getValue()::class) {
-                EnumValue::class => new OptionParameter($name, $allowedValues),
+                EnumValue::class => new OptionParameter($name, array_combine($allowedValues, $allowedValues)),
                 RangeValue::class => new StringParameter(sprintf(
                     '%s (%s..%s)',
                     $name,
