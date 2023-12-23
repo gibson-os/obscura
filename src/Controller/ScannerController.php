@@ -39,12 +39,14 @@ class ScannerController extends AbstractController
         string $deviceName,
         Format $format,
         string $path,
+        string $filename,
         array $options,
     ): AjaxResponse {
         $scannerService->scan(
             $deviceName,
             $format,
             $path,
+            $filename,
             $options,
         );
 

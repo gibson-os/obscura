@@ -46,17 +46,18 @@ class OptionsForm extends AbstractForm
     {
         $fields = [
             'path' => new DirectoryParameter(),
+            'filename' => new StringParameter('Dateiname'),
             'duplex' => new BoolParameter('Duplex'),
-            'format' => new OptionParameter(
+            'format' => (new OptionParameter(
                 'Format',
                 [
-                    Format::PDF->name => Format::PDF->value,
-                    Format::PDF_DUPLEX->name => Format::PDF_DUPLEX->value,
-                    Format::TIFF->name => Format::TIFF->value,
-                    Format::JPEG->name => Format::JPEG->value,
-                    Format::PNG->name => Format::PNG->value,
+                    Format::PDF->value => Format::PDF->name,
+                    Format::PDF_DUPLEX->value => Format::PDF_DUPLEX->name,
+                    Format::TIFF->value => Format::TIFF->name,
+                    Format::JPEG->value => Format::JPEG->name,
+                    Format::PNG->value => Format::PNG->name,
                 ],
-            ),
+            ))->setValue(Format::PDF->name),
         ];
         $options = $this->optionStore
             ->setDeviceName($this->deviceName)

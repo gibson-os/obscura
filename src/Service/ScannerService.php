@@ -5,6 +5,7 @@ namespace GibsonOS\Module\Obscura\Service;
 
 use GibsonOS\Core\Attribute\GetEnv;
 use GibsonOS\Core\Exception\ProcessError;
+use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
@@ -17,6 +18,7 @@ class ScannerService
         private readonly string $scanImagePath,
         private readonly ProcessService $processService,
         private readonly OptionStore $optionStore,
+        private readonly DirService $dirService,
     ) {
     }
 
@@ -28,6 +30,7 @@ class ScannerService
         string $deviceName,
         Format $format,
         string $path,
+        string $filename,
         array $options,
     ): void {
         $this->optionStore->setDeviceName($deviceName);
@@ -35,7 +38,7 @@ class ScannerService
         $arguments = [
             sprintf('-d %s', escapeshellarg($deviceName)),
             '--format tiff',
-            sprintf('--batch %s', escapeshellarg($path)),
+            sprintf('--batch %s', escapeshellarg($this->dirService->addEndSlash($path) . $filename)),
         ];
 
         foreach ($scannerOptions as $scannerOption) {
