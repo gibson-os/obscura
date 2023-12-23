@@ -47,7 +47,7 @@ class OptionsForm extends AbstractForm
         $fields = [
             'path' => new DirectoryParameter(),
             'filename' => new StringParameter('Dateiname'),
-            'duplex' => new BoolParameter('Duplex'),
+            'multipage' => new BoolParameter('Mehrseitig'),
             'format' => (new OptionParameter(
                 'Format',
                 [

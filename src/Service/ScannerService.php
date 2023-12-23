@@ -3,70 +3,44 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Service;
 
-use GibsonOS\Core\Attribute\GetEnv;
+use GibsonOS\Core\Attribute\GetServices;
 use GibsonOS\Core\Exception\ProcessError;
-use GibsonOS\Core\Service\DirService;
-use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
-use GibsonOS\Module\Obscura\Store\OptionStore;
+use GibsonOS\Module\Obscura\Exception\ScanException;
+use GibsonOS\Module\Obscura\Processor\ScanProcessor;
 
 class ScannerService
 {
     public function __construct(
-        #[GetEnv('SCAN_IMAGE_PATH')]
-        private readonly string $scanImagePath,
-        private readonly ProcessService $processService,
-        private readonly OptionStore $optionStore,
-        private readonly DirService $dirService,
+        #[GetServices(['obscura/src/Process'], ScanProcessor::class)]
+        private readonly array $scanProcessors,
     ) {
     }
 
     /**
      * @throws OptionValueException
      * @throws ProcessError
+     * @throws ScanException
      */
     public function scan(
         string $deviceName,
         Format $format,
         string $path,
         string $filename,
+        bool $multipage,
         array $options,
     ): void {
-        $this->optionStore->setDeviceName($deviceName);
-        $scannerOptions = $this->optionStore->getList();
-        $arguments = [
-            sprintf('-d %s', escapeshellarg($deviceName)),
-            '--format tiff',
-            sprintf('--batch %s', escapeshellarg($this->dirService->addEndSlash($path) . $filename)),
-        ];
-
-        foreach ($scannerOptions as $scannerOption) {
-            $option = $options[$scannerOption->getName()] ?? null;
-
-            if ($option === null) {
+        foreach ($this->scanProcessors as $scanProcessor) {
+            if (!$scanProcessor->supports($format)) {
                 continue;
             }
 
-            if (!$scannerOption->getValue()->isValid($scannerOption)) {
-                throw new OptionValueException(sprintf(
-                    'Value "%s" for "%s" is invalid!',
-                    $option,
-                    $scannerOption->getName(),
-                ));
-            }
+            $scanProcessor->scan($deviceName, $path, $filename, $multipage, $options);
 
-            $arguments[] = sprintf(
-                '%s %s',
-                escapeshellarg($scannerOption->getArgument()),
-                escapeshellarg($option),
-            );
+            return;
         }
 
-        $this->processService->execute(sprintf(
-            '%s %s',
-            $this->scanImagePath,
-            implode(' ', $arguments),
-        ));
+        throw new ScanException(sprintf('No scan processor found for "%s"', $format->value));
     }
 }

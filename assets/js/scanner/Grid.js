@@ -38,7 +38,7 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
         }).show();
 
         formWindow.down('form').getForm().on('actioncomplete', () => {
-            formWindow.close();
+            // formWindow.close();
         });
     },
     getColumns() {

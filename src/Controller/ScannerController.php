@@ -40,6 +40,7 @@ class ScannerController extends AbstractController
         Format $format,
         string $path,
         string $filename,
+        bool $multipage,
         array $options,
     ): AjaxResponse {
         $scannerService->scan(
@@ -47,6 +48,7 @@ class ScannerController extends AbstractController
             $format,
             $path,
             $filename,
+            $multipage,
             $options,
         );
 
