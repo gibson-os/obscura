@@ -6,6 +6,7 @@ namespace GibsonOS\Module\Obscura\Service;
 use GibsonOS\Core\Attribute\GetEnv;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\ProcessService;
+use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Store\OptionStore;
 
@@ -25,8 +26,8 @@ class ScannerService
      */
     public function scan(
         string $deviceName,
+        Format $format,
         string $path,
-        bool $duplex,
         array $options,
     ): void {
         $this->optionStore->setDeviceName($deviceName);

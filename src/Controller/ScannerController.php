@@ -8,6 +8,7 @@ use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\Response\AjaxResponse;
+use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Form\OptionsForm;
 use GibsonOS\Module\Obscura\Service\ScannerService;
@@ -36,14 +37,14 @@ class ScannerController extends AbstractController
     public function postScan(
         ScannerService $scannerService,
         string $deviceName,
+        Format $format,
         string $path,
-        bool $duplex,
         array $options,
     ): AjaxResponse {
         $scannerService->scan(
             $deviceName,
+            $format,
             $path,
-            $duplex,
             $options,
         );
 

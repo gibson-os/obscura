@@ -14,6 +14,7 @@ use GibsonOS\Core\Mapper\ModelMapper;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Obscura\Dto\Option\EnumValue;
 use GibsonOS\Module\Obscura\Dto\Option\RangeValue;
+use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Store\OptionStore;
 
@@ -46,6 +47,16 @@ class OptionsForm extends AbstractForm
         $fields = [
             'path' => new DirectoryParameter(),
             'duplex' => new BoolParameter('Duplex'),
+            'format' => new OptionParameter(
+                'Format',
+                [
+                    Format::PDF->name => Format::PDF->value,
+                    Format::PDF_DUPLEX->name => Format::PDF_DUPLEX->value,
+                    Format::TIFF->name => Format::TIFF->value,
+                    Format::JPEG->name => Format::JPEG->value,
+                    Format::PNG->name => Format::PNG->value,
+                ],
+            ),
         ];
         $options = $this->optionStore
             ->setDeviceName($this->deviceName)
