@@ -58,8 +58,9 @@ class TiffProcessor implements ScanProcessor
             }
 
             $arguments[] = sprintf(
-                '%s %s',
+                '%s%s%s',
                 escapeshellarg($scannerOption->getArgument()),
+                mb_strlen($scannerOption->getName()) === 1 ? ' ' : '=',
                 escapeshellarg($option),
             );
         }
