@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Obscura\Controller;
 
 use GibsonOS\Core\Attribute\CheckPermission;
+use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Enum\Permission;
+use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\ProcessError;
+use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
@@ -15,7 +18,10 @@ use GibsonOS\Module\Obscura\Command\ScanCommand;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Form\OptionsForm;
+use GibsonOS\Module\Obscura\Model\Template;
 use JsonException;
+use MDO\Exception\RecordException;
+use ReflectionException;
 
 class ScannerController extends AbstractController
 {
@@ -68,6 +74,9 @@ class ScannerController extends AbstractController
         return $this->returnSuccess();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function getStatus(
         LockService $lockService,
         string $deviceName,
@@ -75,5 +84,21 @@ class ScannerController extends AbstractController
         $lockName = sprintf('obscura_%s', $deviceName);
 
         return $this->returnSuccess(['locked' => $lockService->isLocked($lockName)]);
+    }
+
+    /**
+     * @throws JsonException
+     * @throws SaveError
+     * @throws RecordException
+     * @throws ReflectionException
+     */
+    public function postTemplate(
+        ModelManager $modelManager,
+        #[GetMappedModel]
+        Template $template,
+    ): AjaxResponse {
+        $modelManager->saveWithoutChildren($template);
+
+        return $this->returnSuccess($template);
     }
 }

@@ -96,7 +96,10 @@ class OptionsForm extends AbstractForm
 
         return [
             'fields' => $fields,
-            'buttons' => ['scan' => new Button('Scan', 'obscura', 'scanner', 'scan', ['deviceName' => $this->deviceName])],
+            'buttons' => [
+                'scan' => new Button('Scannen', 'obscura', 'scanner', 'scan', ['deviceName' => $this->deviceName]),
+                'save' => new Button('Speichern', 'obscura', 'scanner', 'template'),
+            ],
         ];
     }
 
