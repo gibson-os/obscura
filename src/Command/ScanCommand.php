@@ -9,6 +9,7 @@ use GibsonOS\Core\Exception\Lock\LockException;
 use GibsonOS\Core\Exception\Lock\UnlockException;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\LockService;
+use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Exception\ScanException;
@@ -25,7 +26,7 @@ class ScanCommand extends AbstractCommand
     private string $deviceName;
 
     #[Argument('Format')]
-    private Format $format;
+    private string $format;
 
     #[Argument('Path')]
     private string $path;
@@ -37,7 +38,7 @@ class ScanCommand extends AbstractCommand
     private bool $multipage;
 
     #[Argument('Scanner options')]
-    private array $options;
+    private string $options;
 
     public function __construct(
         LoggerInterface $logger,
@@ -62,11 +63,15 @@ class ScanCommand extends AbstractCommand
 
         $this->scannerService->scan(
             $this->deviceName,
-            $this->format,
+            constant(sprintf(
+                '%s::%s',
+                Format::class,
+                $this->format,
+            )),
             $this->path,
             $this->filename,
             $this->multipage,
-            $this->options,
+            JsonUtility::decode($this->options),
         );
 
         $this->lockService->unlock($lockName);
@@ -79,7 +84,7 @@ class ScanCommand extends AbstractCommand
         $this->deviceName = $deviceName;
     }
 
-    public function setFormat(Format $format): void
+    public function setFormat(string $format): void
     {
         $this->format = $format;
     }
@@ -99,7 +104,7 @@ class ScanCommand extends AbstractCommand
         $this->multipage = $multipage;
     }
 
-    public function setOptions(array $options): void
+    public function setOptions(string $options): void
     {
         $this->options = $options;
     }

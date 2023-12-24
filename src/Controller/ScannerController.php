@@ -10,6 +10,7 @@ use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
+use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Command\ScanCommand;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
@@ -56,11 +57,11 @@ class ScannerController extends AbstractController
             ScanCommand::class,
             [
                 'deviceName' => $deviceName,
-                'format' => $format,
+                'format' => $format->name,
                 'path' => $path,
                 'filename' => $filename,
                 'multipage' => $multipage,
-                'options' => $options,
+                'options' => JsonUtility::encode($options),
             ],
         );
 
