@@ -45,12 +45,17 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
             let reload = function() {
                 GibsonOS.Ajax.request({
                     url: baseDir + 'obscura/scanner/status',
+                    params: {
+                        deviceName: record.get('deviceName')
+                    },
                     method: 'GET',
                     success(response) {
                         const data = Ext.decode(response.responseText).data;
 
                         if (data.locked) {
-                            reload();
+                            setTimeout(reload, 500);
+
+                            return;
                         }
 
                         form.setLoading(false);
@@ -60,6 +65,7 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
                     }
                 });
             };
+            setTimeout(reload, 500);
         });
     },
     getColumns() {
