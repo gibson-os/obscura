@@ -37,8 +37,29 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
             }
         }).show();
 
-        formWindow.down('form').getForm().on('actioncomplete', () => {
-            // formWindow.close();
+        let form = formWindow.down('form');
+
+        form.getForm().on('actioncomplete', () => {
+            form.setLoading(true);
+
+            let reload = function() {
+                GibsonOS.Ajax.request({
+                    url: baseDir + 'obscura/scanner/status',
+                    method: 'GET',
+                    success(response) {
+                        const data = Ext.decode(response.responseText).data;
+
+                        if (data.locked) {
+                            reload();
+                        }
+
+                        form.setLoading(false);
+                    },
+                    failure() {
+                        form.setLoading(false);
+                    }
+                });
+            };
         });
     },
     getColumns() {
