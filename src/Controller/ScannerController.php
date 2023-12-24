@@ -7,11 +7,14 @@ use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Enum\Permission;
 use GibsonOS\Core\Exception\ProcessError;
+use GibsonOS\Core\Service\CommandService;
+use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
+use GibsonOS\Module\Obscura\Command\ScanCommand;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Form\OptionsForm;
-use GibsonOS\Module\Obscura\Service\ScannerService;
+use JsonException;
 
 class ScannerController extends AbstractController
 {
@@ -30,12 +33,12 @@ class ScannerController extends AbstractController
     }
 
     /**
-     * @throws OptionValueException
-     * @throws ProcessError
+     * @throws JsonException
      */
     #[CheckPermission([Permission::WRITE])]
     public function postScan(
-        ScannerService $scannerService,
+        LockService $lockService,
+        CommandService $commandService,
         string $deviceName,
         Format $format,
         string $path,
@@ -43,15 +46,33 @@ class ScannerController extends AbstractController
         bool $multipage,
         array $options,
     ): AjaxResponse {
-        $scannerService->scan(
-            $deviceName,
-            $format,
-            $path,
-            $filename,
-            $multipage,
-            $options,
+        $lockName = sprintf('obscura_%s', $deviceName);
+
+        if ($lockService->isLocked($lockName)) {
+            return $this->returnFailure('Scanner is busy');
+        }
+
+        $commandService->executeAsync(
+            ScanCommand::class,
+            [
+                'deviceName' => $deviceName,
+                'format' => $format,
+                'path' => $path,
+                'filename' => $filename,
+                'multipage' => $multipage,
+                'options' => $options,
+            ],
         );
 
         return $this->returnSuccess();
+    }
+
+    public function getStatus(
+        LockService $lockService,
+        string $deviceName,
+    ): AjaxResponse {
+        $lockName = sprintf('obscura_%s', $deviceName);
+
+        return $this->returnSuccess(['locked' => $lockService->isLocked($lockName)]);
     }
 }
