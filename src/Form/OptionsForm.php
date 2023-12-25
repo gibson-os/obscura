@@ -24,6 +24,10 @@ class OptionsForm extends AbstractForm
 {
     private string $deviceName;
 
+    private string $vendor;
+
+    private string $model;
+
     public function __construct(
         ModelMapper $modelMapper,
         private readonly OptionStore $optionStore,
@@ -39,6 +43,20 @@ class OptionsForm extends AbstractForm
         return $this;
     }
 
+    public function setVendor(string $vendor): OptionsForm
+    {
+        $this->vendor = $vendor;
+
+        return $this;
+    }
+
+    public function setModel(string $model): OptionsForm
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
     /**
      * @throws OptionValueException
      * @throws ProcessError
@@ -48,7 +66,9 @@ class OptionsForm extends AbstractForm
     protected function getFields(): array
     {
         $fields = [
-            'name' => new AutoCompleteParameter('Vorlage', $this->templateAutoComplete),
+            'name' => (new AutoCompleteParameter('Vorlage', $this->templateAutoComplete))
+                ->setParameter('vendor', $this->vendor)
+                ->setParameter('model', $this->model),
             'path' => new DirectoryParameter(),
             'filename' => new StringParameter('Dateiname'),
             'multipage' => new BoolParameter('Mehrseitig'),

@@ -33,8 +33,14 @@ class ScannerController extends AbstractController
     public function getForm(
         OptionsForm $optionsForm,
         string $deviceName,
+        string $vendor,
+        string $model,
     ): AjaxResponse {
-        $optionsForm->setDeviceName($deviceName);
+        $optionsForm
+            ->setDeviceName($deviceName)
+            ->setVendor($vendor)
+            ->setModel($model)
+        ;
 
         return $this->returnSuccess($optionsForm->getForm());
     }

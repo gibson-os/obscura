@@ -33,7 +33,9 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
             url: baseDir + 'obscura/scanner/form',
             method: 'GET',
             params: {
-                deviceName: record.get('deviceName')
+                deviceName: record.get('deviceName'),
+                vendor: record.get('vendor'),
+                model: record.get('model'),
             }
         }).show();
 
