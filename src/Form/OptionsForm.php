@@ -5,6 +5,7 @@ namespace GibsonOS\Module\Obscura\Form;
 
 use GibsonOS\Core\Dto\Form\Button;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
+use GibsonOS\Core\Dto\Parameter\AutoCompleteParameter;
 use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
@@ -12,6 +13,7 @@ use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Form\AbstractForm;
 use GibsonOS\Core\Mapper\ModelMapper;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
+use GibsonOS\Module\Obscura\AutoComplete\TemplateAutoComplete;
 use GibsonOS\Module\Obscura\Dto\Option\EnumValue;
 use GibsonOS\Module\Obscura\Dto\Option\RangeValue;
 use GibsonOS\Module\Obscura\Enum\Format;
@@ -25,6 +27,7 @@ class OptionsForm extends AbstractForm
     public function __construct(
         ModelMapper $modelMapper,
         private readonly OptionStore $optionStore,
+        private readonly TemplateAutoComplete $templateAutoComplete,
     ) {
         parent::__construct($modelMapper);
     }
@@ -45,6 +48,7 @@ class OptionsForm extends AbstractForm
     protected function getFields(): array
     {
         $fields = [
+            'name' => new AutoCompleteParameter('Vorlage', $this->templateAutoComplete),
             'path' => new DirectoryParameter(),
             'filename' => new StringParameter('Dateiname'),
             'multipage' => new BoolParameter('Mehrseitig'),

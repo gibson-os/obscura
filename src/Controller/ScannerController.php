@@ -96,6 +96,7 @@ class ScannerController extends AbstractController
         ModelManager $modelManager,
         #[GetMappedModel]
         Template $template,
+        bool $overwrite,
     ): AjaxResponse {
         $modelManager->saveWithoutChildren($template);
 

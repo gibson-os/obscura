@@ -7,12 +7,13 @@ use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
+use GibsonOS\Core\Model\AutoCompleteModelInterface;
 use GibsonOS\Module\Obscura\Enum\Format;
 use JsonSerializable;
 
 #[Table]
 #[Key(true, ['name', 'vendor', 'model'])]
-class Template extends AbstractModel implements JsonSerializable
+class Template extends AbstractModel implements JsonSerializable, AutoCompleteModelInterface
 {
     #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
     private ?int $id = null;
@@ -161,5 +162,10 @@ class Template extends AbstractModel implements JsonSerializable
             'multipage' => $this->isMultipage(),
             'options' => $this->getOptions(),
         ];
+    }
+
+    public function getAutoCompleteId(): int
+    {
+        return $this->getId() ?? 0;
     }
 }
