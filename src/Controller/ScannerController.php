@@ -7,8 +7,10 @@ use GibsonOS\Core\Attribute\CheckPermission;
 use GibsonOS\Core\Attribute\GetMappedModel;
 use GibsonOS\Core\Controller\AbstractController;
 use GibsonOS\Core\Enum\Permission;
+use GibsonOS\Core\Exception\AbstractException;
 use GibsonOS\Core\Exception\Model\SaveError;
 use GibsonOS\Core\Exception\ProcessError;
+use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CommandService;
 use GibsonOS\Core\Service\LockService;
@@ -17,9 +19,12 @@ use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Command\ScanCommand;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
+use GibsonOS\Module\Obscura\Exception\TemplateException;
 use GibsonOS\Module\Obscura\Form\OptionsForm;
 use GibsonOS\Module\Obscura\Model\Template;
+use GibsonOS\Module\Obscura\Repository\TemplateRepository;
 use JsonException;
+use MDO\Exception\ClientException;
 use MDO\Exception\RecordException;
 use ReflectionException;
 
@@ -97,13 +102,35 @@ class ScannerController extends AbstractController
      * @throws SaveError
      * @throws RecordException
      * @throws ReflectionException
+     * @throws ClientException
      */
     public function postTemplate(
+        TemplateRepository $templateRepository,
         ModelManager $modelManager,
         #[GetMappedModel]
         Template $template,
-        bool $overwrite,
+        bool $overwrite = false,
     ): AjaxResponse {
+        try {
+            $existingTemplate = $templateRepository->getByName(
+                $template->getName(),
+                $template->getVendor(),
+                $template->getModel(),
+            );
+
+            if ($overwrite === false) {
+                $exception = new TemplateException(sprintf('Ex existiert bereits eine Vorlage unter dem Namen "%s"', $template->getName()));
+                $exception->setType(AbstractException::QUESTION);
+                $exception->addButton('Vorlage überschreiben', 'overwrite', true);
+                $exception->addButton('Abbrechen');
+
+                throw $exception;
+            }
+
+            $template->setId($existingTemplate->getId());
+        } catch (SelectError) {
+        }
+
         $modelManager->saveWithoutChildren($template);
 
         return $this->returnSuccess($template);

@@ -11,10 +11,14 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
                 id: null,
                 module: 'obscura',
                 task: 'scanner',
-                action: '',
+                action: 'form',
                 text: record.get('deviceName'),
                 icon: 'icon_scan',
-                parameters: record.getData()
+                parameters: {
+                    deviceName: record.get('deviceName'),
+                    vendor: record.get('vendor'),
+                    model: record.get('model'),
+                }
             });
         });
 
@@ -40,6 +44,38 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
         }).show();
 
         let form = formWindow.down('form');
+        let basicForm = form.getForm();
+        let setValue = (fieldName, value) => {
+            let field = basicForm.findField(fieldName);
+
+            if (field === null) {
+                return;
+            }
+
+            field.setValue(value);
+        };
+
+        form.on('afterAddFields', (field, value) => {
+            basicForm.findField('name').on('change', (field, value) => {
+                let template = field.findRecordByValue(value);
+
+                if (template === false) {
+                    return;
+                }
+
+                Ext.iterate(template.getData(), (templateFieldName, templateValue) => {
+                    if (templateFieldName === 'options') {
+                        Ext.iterate(templateValue, (optionFieldName, optionValue) => {
+                            setValue('options[' + optionFieldName + ']', optionValue);
+                        });
+
+                        return true;
+                    }
+
+                    setValue(templateFieldName, templateValue);
+                });
+            });
+        });
 
         form.getForm().on('actioncomplete', () => {
             form.setLoading(true);

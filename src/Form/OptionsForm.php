@@ -11,7 +11,6 @@ use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Form\AbstractForm;
-use GibsonOS\Core\Mapper\ModelMapper;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Obscura\AutoComplete\TemplateAutoComplete;
 use GibsonOS\Module\Obscura\Dto\Option\EnumValue;
@@ -29,11 +28,9 @@ class OptionsForm extends AbstractForm
     private string $model;
 
     public function __construct(
-        ModelMapper $modelMapper,
         private readonly OptionStore $optionStore,
         private readonly TemplateAutoComplete $templateAutoComplete,
     ) {
-        parent::__construct($modelMapper);
     }
 
     public function setDeviceName(string $deviceName): OptionsForm
@@ -121,8 +118,23 @@ class OptionsForm extends AbstractForm
         return [
             'fields' => $fields,
             'buttons' => [
-                'scan' => new Button('Scannen', 'obscura', 'scanner', 'scan', ['deviceName' => $this->deviceName]),
-                'save' => new Button('Speichern', 'obscura', 'scanner', 'template'),
+                'scan' => new Button(
+                    'Scannen',
+                    'obscura',
+                    'scanner',
+                    'scan',
+                    ['deviceName' => $this->deviceName],
+                ),
+                'save' => new Button(
+                    'Speichern',
+                    'obscura',
+                    'scanner',
+                    'template',
+                    [
+                        'vendor' => $this->vendor,
+                        'model' => $this->model,
+                    ],
+                ),
             ],
         ];
     }
