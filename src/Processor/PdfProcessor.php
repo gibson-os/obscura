@@ -42,7 +42,7 @@ class PdfProcessor implements ScanProcessor
 
         foreach ($this->dirService->getFiles(sys_get_temp_dir(), sprintf('%s*.tiff', $tmpTiffFilePattern)) as $tmpTiffFilename) {
             $tmpPdfFilename = $this->tiff2pdf($deviceName, $tmpTiffFilename);
-            $tmpOcrPdfFilename = $this->ocrPdf($tmpPdfFilename, $filename);
+            $tmpOcrPdfFilename = $this->ocrPdf($deviceName, $tmpPdfFilename);
 
             $pdfFileNames[] = escapeshellarg($tmpOcrPdfFilename);
             unlink($tmpTiffFilename);
