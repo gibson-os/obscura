@@ -12,6 +12,7 @@ use GibsonOS\Module\Obscura\Processor\ScanProcessor;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Extension\StringLoaderExtension;
 
 class ScannerService
 {
@@ -24,6 +25,7 @@ class ScannerService
         private readonly TwigService $twigService,
         private readonly DirService $dirService,
     ) {
+        $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
     }
 
     /**

@@ -7,15 +7,16 @@ use GibsonOS\Core\Attribute\Command\Argument;
 use GibsonOS\Core\Command\AbstractCommand;
 use GibsonOS\Core\Exception\Lock\LockException;
 use GibsonOS\Core\Exception\Lock\UnlockException;
-use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Enum\Format;
-use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Exception\ScanException;
 use GibsonOS\Module\Obscura\Service\ScannerService;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * @description Scan from device
@@ -51,10 +52,11 @@ class ScanCommand extends AbstractCommand
     /**
      * @throws JsonException
      * @throws LockException
-     * @throws UnlockException
-     * @throws ProcessError
-     * @throws OptionValueException
      * @throws ScanException
+     * @throws UnlockException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     protected function run(): int
     {

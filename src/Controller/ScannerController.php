@@ -103,7 +103,7 @@ class ScannerController extends AbstractController
      */
     public function postTemplate(
         ModelManager $modelManager,
-        #[GetMappedModel(['id' => 'name'])]
+        #[GetMappedModel(['id' => 'name'], ['name' => ''])]
         Template $templateById,
         #[GetMappedModel(['name' => 'name', 'vendor' => 'vendor', 'model' => 'model'])]
         Template $templateByName,
