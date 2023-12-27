@@ -37,24 +37,4 @@ class TemplateRepository extends AbstractRepository
             Template::class,
         );
     }
-
-    /**
-     * @throws ClientException
-     * @throws JsonException
-     * @throws RecordException
-     * @throws ReflectionException
-     * @throws SelectError
-     */
-    public function getByName(string $name, string $vendor, string $model): Template
-    {
-        return $this->fetchOne(
-            '`name`=:name AND `vendor`=:vendor AND `model`=:model',
-            [
-                'name' => $name,
-                'vendor' => $vendor,
-                'model' => $model,
-            ],
-            Template::class,
-        );
-    }
 }

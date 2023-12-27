@@ -64,6 +64,10 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
                 }
 
                 Ext.iterate(template.getData(), (templateFieldName, templateValue) => {
+                    if (templateFieldName === 'name') {
+                        return true;
+                    }
+
                     if (templateFieldName === 'options') {
                         Ext.iterate(templateValue, (optionFieldName, optionValue) => {
                             setValue('options[' + optionFieldName + ']', optionValue);

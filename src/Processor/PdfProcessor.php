@@ -29,14 +29,13 @@ class PdfProcessor implements ScanProcessor
      */
     public function scan(
         string $deviceName,
-        string $path,
         string $filename,
         bool $multipage,
         array $options,
     ): void {
         $tmpTiffFilename = $this->scanTiff($deviceName, $multipage, $options);
         $tmpPdfFilename = $this->tiff2pdf($deviceName, $tmpTiffFilename);
-        $this->ocrPdf($tmpPdfFilename, $path, $filename);
+        $this->ocrPdf($tmpPdfFilename, $filename);
 
         unlink($tmpTiffFilename);
         unlink($tmpPdfFilename);
@@ -54,11 +53,12 @@ class PdfProcessor implements ScanProcessor
     private function scanTiff(string $deviceName, bool $multipage, array $options): string
     {
         $tmpTiffFilename = sprintf(
-            'obscura%s%d.tiff',
+            '%sobscura%s%d.tiff',
+            $this->dirService->addEndSlash(sys_get_temp_dir()),
             preg_replace('/\W/', '', $deviceName),
             time(),
         );
-        $this->tiffProcessor->scan($deviceName, sys_get_temp_dir(), $tmpTiffFilename, $multipage, $options);
+        $this->tiffProcessor->scan($deviceName, $tmpTiffFilename, $multipage, $options);
 
         return $tmpTiffFilename;
     }
@@ -69,27 +69,26 @@ class PdfProcessor implements ScanProcessor
     private function tiff2pdf(string $deviceName, string $filename): string
     {
         $tmpFilename = sprintf(
-            'obscura%s%d.pdf',
+            '%sobscura%s%d.pdf',
+            $this->dirService->addEndSlash(sys_get_temp_dir()),
             preg_replace('/\W/', '', $deviceName),
             time(),
         );
-        $this->processService->execute(sprintf(
-            '%s -o %s %s',
-            $this->tiff2PdfPath,
-            $this->dirService->addEndSlash(sys_get_temp_dir()) . $tmpFilename,
-            $this->dirService->addEndSlash(sys_get_temp_dir()) . $filename,
-        ));
+        $this->processService->execute(sprintf('%s -o %s %s', $this->tiff2PdfPath, $tmpFilename, $filename));
 
         return $tmpFilename;
     }
 
-    private function ocrPdf(string $tmpFilename, string $path, string $filename): void
+    /**
+     * @throws ProcessError
+     */
+    private function ocrPdf(string $tmpFilename, string $filename): void
     {
         $this->processService->execute(sprintf(
             '%s %s %s -l deu+eng --image-dpi 300 -c -i',
             $this->ocrMyPdfPath,
-            $this->dirService->addEndSlash(sys_get_temp_dir()) . $tmpFilename,
-            $this->dirService->addEndSlash($path) . $filename,
+            $tmpFilename,
+            $filename,
         ));
     }
 }

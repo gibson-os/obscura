@@ -5,7 +5,6 @@ namespace GibsonOS\Module\Obscura\Processor;
 
 use GibsonOS\Core\Attribute\GetEnv;
 use GibsonOS\Core\Exception\ProcessError;
-use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Enum\Format;
@@ -19,7 +18,6 @@ class TiffProcessor implements ScanProcessor
         private readonly string $scanImagePath,
         private readonly ProcessService $processService,
         private readonly OptionStore $optionStore,
-        private readonly DirService $dirService,
     ) {
     }
 
@@ -29,7 +27,6 @@ class TiffProcessor implements ScanProcessor
      */
     public function scan(
         string $deviceName,
-        string $path,
         string $filename,
         bool $multipage,
         array $options,
@@ -65,7 +62,7 @@ class TiffProcessor implements ScanProcessor
             );
         }
 
-        $escapedPath = escapeshellarg($this->dirService->addEndSlash($path) . $filename);
+        $escapedPath = escapeshellarg($filename);
         $arguments[] = $multipage
             ? sprintf('--batch %s', $escapedPath)
             : sprintf('> %s', $escapedPath)
