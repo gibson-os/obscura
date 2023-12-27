@@ -64,7 +64,7 @@ class TiffProcessor implements ScanProcessor
 
         $arguments[] = $multipage
             ? sprintf(
-                '--batch %s',
+                '--batch=%s',
                 escapeshellarg(mb_strpos($filename, '%d') === false ? str_replace('.', '%d.', $filename) : $filename),
             )
             : sprintf('> %s', escapeshellarg($filename))

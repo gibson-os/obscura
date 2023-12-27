@@ -50,10 +50,6 @@ class PdfProcessor implements ScanProcessor
         }
 
         $this->pdfUnite($pdfFileNames, $filename);
-
-        foreach ($pdfFileNames as $pdfFileName) {
-            unlink($pdfFileName);
-        }
     }
 
     public function supports(Format $format): bool
