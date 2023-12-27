@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Obscura\Processor;
 
 use GibsonOS\Core\Attribute\GetEnv;
+use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\ProcessService;
@@ -20,12 +21,15 @@ class PdfProcessor implements ScanProcessor
         private readonly string $tiff2PdfPath,
         #[GetEnv('OCRMYPDF_PATH')]
         private readonly string $ocrMyPdfPath,
+        #[GetEnv('PDF_UNITE_PATH')]
+        private readonly string $pdfUnitePath,
     ) {
     }
 
     /**
      * @throws ProcessError
      * @throws OptionValueException
+     * @throws GetError
      */
     public function scan(
         string $deviceName,
@@ -33,12 +37,23 @@ class PdfProcessor implements ScanProcessor
         bool $multipage,
         array $options,
     ): void {
-        $tmpTiffFilename = $this->scanTiff($deviceName, $multipage, $options);
-        $tmpPdfFilename = $this->tiff2pdf($deviceName, $tmpTiffFilename);
-        $this->ocrPdf($tmpPdfFilename, $filename);
+        $tmpTiffFilePattern = $this->scanTiff($deviceName, $multipage, $options);
+        $pdfFileNames = [];
 
-        unlink($tmpTiffFilename);
-        unlink($tmpPdfFilename);
+        foreach ($this->dirService->getFiles(sys_get_temp_dir(), sprintf('%s*.tiff', $tmpTiffFilePattern)) as $tmpTiffFilename) {
+            $tmpPdfFilename = $this->tiff2pdf($deviceName, $tmpTiffFilename);
+            $tmpOcrPdfFilename = $this->ocrPdf($tmpPdfFilename, $filename);
+
+            $pdfFileNames[] = escapeshellarg($tmpOcrPdfFilename);
+            unlink($tmpTiffFilename);
+            unlink($tmpPdfFilename);
+        }
+
+        $this->pdfUnite($pdfFileNames, $filename);
+
+        foreach ($pdfFileNames as $pdfFileName) {
+            unlink($pdfFileName);
+        }
     }
 
     public function supports(Format $format): bool
@@ -53,12 +68,16 @@ class PdfProcessor implements ScanProcessor
     private function scanTiff(string $deviceName, bool $multipage, array $options): string
     {
         $tmpTiffFilename = sprintf(
-            '%sobscura%s%d.tiff',
-            $this->dirService->addEndSlash(sys_get_temp_dir()),
+            'obscura%s%d',
             preg_replace('/\W/', '', $deviceName),
             time(),
         );
-        $this->tiffProcessor->scan($deviceName, $tmpTiffFilename, $multipage, $options);
+        $this->tiffProcessor->scan(
+            $deviceName,
+            sprintf('%s%s.tiff', $this->dirService->addEndSlash(sys_get_temp_dir()), $tmpTiffFilename),
+            $multipage,
+            $options,
+        );
 
         return $tmpTiffFilename;
     }
@@ -82,12 +101,33 @@ class PdfProcessor implements ScanProcessor
     /**
      * @throws ProcessError
      */
-    private function ocrPdf(string $tmpFilename, string $filename): void
+    private function ocrPdf(string $deviceName, string $filename): string
     {
+        $tmpFilename = sprintf(
+            '%sobscura%s%docr.pdf',
+            $this->dirService->addEndSlash(sys_get_temp_dir()),
+            preg_replace('/\W/', '', $deviceName),
+            time(),
+        );
         $this->processService->execute(sprintf(
             '%s %s %s -l deu+eng --image-dpi 300 -c -i',
             $this->ocrMyPdfPath,
+            $filename,
             $tmpFilename,
+        ));
+
+        return $tmpFilename;
+    }
+
+    /**
+     * @throws ProcessError
+     */
+    private function pdfUnite(array $pdfFilenames, string $filename): void
+    {
+        $this->processService->execute(sprintf(
+            '%s %s %s',
+            $this->pdfUnitePath,
+            implode(' ', $pdfFilenames),
             $filename,
         ));
     }

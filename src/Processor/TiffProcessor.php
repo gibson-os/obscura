@@ -62,10 +62,12 @@ class TiffProcessor implements ScanProcessor
             );
         }
 
-        $escapedPath = escapeshellarg($filename);
         $arguments[] = $multipage
-            ? sprintf('--batch %s', $escapedPath)
-            : sprintf('> %s', $escapedPath)
+            ? sprintf(
+                '--batch %s',
+                escapeshellarg(mb_strpos($filename, '%d') === false ? str_replace('.', '%d.', $filename) : $filename),
+            )
+            : sprintf('> %s', escapeshellarg($filename))
         ;
 
         $this->processService->execute(sprintf(
