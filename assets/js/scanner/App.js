@@ -5,6 +5,7 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
     url: baseDir + 'obscura/scanner/form',
     method: 'GET',
     autoHeight: true,
+    y: 50,
     initComponent() {
         const me = this;
 
@@ -20,6 +21,15 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
 
         let form = me.down('form');
         let basicForm = form.getForm();
+        let setValue = (fieldName, value) => {
+            let field = basicForm.findField(fieldName);
+
+            if (field === null) {
+                return;
+            }
+
+            field.setValue(value);
+        };
 
         form.on('afterAddFields', () => {
             basicForm.findField('name').on('change', (field, value) => {
