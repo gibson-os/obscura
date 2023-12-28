@@ -60,16 +60,18 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
         basicForm.on('actioncomplete', () => {
             me.setLoading(true);
 
-            let reload = function() {
+            let lastCheck = null;
+            const reload = function() {
                 GibsonOS.Ajax.request({
                     url: baseDir + 'obscura/scanner/status',
                     params: {
-                        deviceName: me.params.deviceName
+                        deviceName: me.params.deviceName,
+                        lastCheck: lastCheck
                     },
                     method: 'GET',
-                    success(response) {
+                    success: function(response) {
                         const data = Ext.decode(response.responseText).data;
-                        this.params.lastCheck = data.date;
+                        lastCheck = data.date;
 
                         if (data.locked) {
                             setTimeout(reload, 500);
@@ -78,9 +80,11 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
                         }
 
                         me.setLoading(false);
+                        lastCheck = null;
                     },
                     failure() {
                         me.setLoading(false);
+                        lastCheck = null;
                     }
                 });
             };

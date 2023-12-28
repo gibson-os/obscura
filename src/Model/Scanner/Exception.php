@@ -23,6 +23,7 @@ class Exception extends AbstractModel
     #[Column(type: Column::TYPE_TEXT)]
     private string $exception;
 
+    #[Column]
     private DateTimeImmutable $added;
 
     public function __construct(ModelWrapper $modelWrapper)
