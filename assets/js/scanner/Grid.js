@@ -32,83 +32,13 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
         me.callParent(arguments);
     },
     enterFunction(record) {
-        const formWindow = new GibsonOS.module.core.component.form.Window({
-            title: 'Scannen',
-            url: baseDir + 'obscura/scanner/form',
-            method: 'GET',
+        new GibsonOS.module.obscura.scanner.Window({
             params: {
                 deviceName: record.get('deviceName'),
                 vendor: record.get('vendor'),
                 model: record.get('model'),
             }
         }).show();
-
-        let form = formWindow.down('form');
-        let basicForm = form.getForm();
-        let setValue = (fieldName, value) => {
-            let field = basicForm.findField(fieldName);
-
-            if (field === null) {
-                return;
-            }
-
-            field.setValue(value);
-        };
-
-        form.on('afterAddFields', (field, value) => {
-            basicForm.findField('name').on('change', (field, value) => {
-                let template = field.findRecordByValue(value);
-
-                if (template === false) {
-                    return;
-                }
-
-                Ext.iterate(template.getData(), (templateFieldName, templateValue) => {
-                    if (templateFieldName === 'name') {
-                        return true;
-                    }
-
-                    if (templateFieldName === 'options') {
-                        Ext.iterate(templateValue, (optionFieldName, optionValue) => {
-                            setValue('options[' + optionFieldName + ']', optionValue);
-                        });
-
-                        return true;
-                    }
-
-                    setValue(templateFieldName, templateValue);
-                });
-            });
-        });
-
-        form.getForm().on('actioncomplete', () => {
-            form.setLoading(true);
-
-            let reload = function() {
-                GibsonOS.Ajax.request({
-                    url: baseDir + 'obscura/scanner/status',
-                    params: {
-                        deviceName: record.get('deviceName')
-                    },
-                    method: 'GET',
-                    success(response) {
-                        const data = Ext.decode(response.responseText).data;
-
-                        if (data.locked) {
-                            setTimeout(reload, 500);
-
-                            return;
-                        }
-
-                        form.setLoading(false);
-                    },
-                    failure() {
-                        form.setLoading(false);
-                    }
-                });
-            };
-            setTimeout(reload, 500);
-        });
     },
     getColumns() {
         return [{

@@ -64,7 +64,7 @@ class PdfDuplexProcessor implements ScanProcessor
         throw (new ScanException('Bitte nun die geraden Seiten von hinten einlegen.'))
             ->setType(AbstractException::INFO)
             ->setExtraParameter('deviceName', $deviceName)
-            ->setExtraParameter('options[pdfFilenames]', JsonUtility::encode($pdfFileNames))
+            ->addButton('OK', 'options[pdfFilenames]', JsonUtility::encode($pdfFileNames))
         ;
     }
 
