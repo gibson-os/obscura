@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Repository\Scanner;
 
-use DateTimeImmutable;
+use DateTimeInterface;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Obscura\Model\Scanner\Exception;
@@ -21,7 +21,7 @@ class ExceptionRepository extends AbstractRepository
      * @throws RecordException
      * @throws ReflectionException
      */
-    public function getByLastCheck(string $deviceName, DateTimeImmutable $date): Exception
+    public function getByLastCheck(string $deviceName, DateTimeInterface $date): Exception
     {
         return $this->fetchOne(
             '`device_name`=:deviceName AND `added`>=:date',

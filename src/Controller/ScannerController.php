@@ -14,6 +14,7 @@ use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Manager\ModelManager;
 use GibsonOS\Core\Service\CommandService;
+use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Utility\JsonUtility;
@@ -93,17 +94,20 @@ class ScannerController extends AbstractController
      * @throws ClientException
      */
     public function getStatus(
+        DateTimeService $dateTimeService,
         LockService $lockService,
         ExceptionRepository $exceptionRepository,
         string $deviceName,
-        DateTimeImmutable $lastCheck = null,
+        string $lastCheck = null,
     ): AjaxResponse {
         $lockName = sprintf('obscura_%s', $deviceName);
         $isLocked = $lockService->isLocked($lockName);
 
         if (!$isLocked && $lastCheck !== null) {
+            $lastCheckDate = $dateTimeService->get($lastCheck);
+
             try {
-                $exception = $exceptionRepository->getByLastCheck($deviceName, $lastCheck);
+                $exception = $exceptionRepository->getByLastCheck($deviceName, $lastCheckDate);
 
                 throw $exception->getException();
             } catch (SelectError) {

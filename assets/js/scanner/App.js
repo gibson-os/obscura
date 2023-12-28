@@ -69,6 +69,7 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
                     method: 'GET',
                     success(response) {
                         const data = Ext.decode(response.responseText).data;
+                        this.params.lastCheck = data.date;
 
                         if (data.locked) {
                             setTimeout(reload, 500);
