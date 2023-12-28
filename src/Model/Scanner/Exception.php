@@ -15,7 +15,7 @@ class Exception extends AbstractModel
     #[Column(length: 128, primary: true)]
     private string $deviceName;
 
-    #[Column(type: Column::TYPE_TEXT)]
+    #[Column(length: 10240)]
     private string $exception;
 
     #[Column]
