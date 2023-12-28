@@ -31,14 +31,20 @@ Ext.define('GibsonOS.module.obscura.scanner.Grid', {
 
         me.callParent(arguments);
     },
+    enterButton: {
+        text: 'Scannen',
+        iconCls: 'icon_scan',
+    },
     enterFunction(record) {
-        new GibsonOS.module.obscura.scanner.Window({
-            params: {
-                deviceName: record.get('deviceName'),
-                vendor: record.get('vendor'),
-                model: record.get('model'),
+        new GibsonOS.module.obscura.scanner.App({
+            gos: {
+                data: {
+                    deviceName: record.get('deviceName'),
+                    vendor: record.get('vendor'),
+                    model: record.get('model')
+                }
             }
-        }).show();
+        });
     },
     getColumns() {
         return [{

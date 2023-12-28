@@ -8,6 +8,7 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
     initComponent() {
         const me = this;
 
+        me.params = me.gos.data;
         me.items = [{
             xtype: 'gosCoreComponentFormPanel',
             url: me.url,
