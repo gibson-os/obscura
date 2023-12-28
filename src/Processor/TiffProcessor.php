@@ -34,8 +34,8 @@ class TiffProcessor implements ScanProcessor
         $this->optionStore->setDeviceName($deviceName);
         $scannerOptions = $this->optionStore->getList();
         $arguments = [
-            sprintf('-d %s', escapeshellarg($deviceName)),
-            '--format tiff',
+            escapeshellarg(sprintf('-d %s', $deviceName)),
+            escapeshellarg('--format tiff'),
         ];
 
         foreach ($scannerOptions as $scannerOption) {
@@ -54,19 +54,19 @@ class TiffProcessor implements ScanProcessor
                 ));
             }
 
-            $arguments[] = sprintf(
+            $arguments[] = escapeshellarg(sprintf(
                 '%s%s%s',
-                escapeshellarg($scannerOption->getArgument()),
-                mb_strlen($scannerOption->getName()) === 1 ? ' ' : '=',
-                escapeshellarg($option),
-            );
+                $scannerOption->getArgument(),
+                $scannerOption->hasEqualSign() ? '=' : ' ',
+                $option,
+            ));
         }
 
         $arguments[] = $multipage
-            ? sprintf(
+            ? escapeshellarg(sprintf(
                 '--batch=%s',
-                escapeshellarg(mb_strpos($filename, '%d') === false ? str_replace('.', '%d.', $filename) : $filename),
-            )
+                mb_strpos($filename, '%d') === false ? str_replace('.', '%d.', $filename) : $filename,
+            ))
             : sprintf('> %s', escapeshellarg($filename))
         ;
 

@@ -13,6 +13,7 @@ class Option
         private readonly string $description,
         private readonly string $default,
         private readonly Value $value,
+        private readonly bool $equalSign,
     ) {
     }
 
@@ -39,5 +40,10 @@ class Option
     public function getValue(): Value
     {
         return $this->value;
+    }
+
+    public function hasEqualSign(): bool
+    {
+        return $this->equalSign;
     }
 }

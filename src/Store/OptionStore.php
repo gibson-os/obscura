@@ -69,10 +69,11 @@ class OptionStore extends AbstractStore
         $optionPossibleValues = '';
         $optionDefault = '';
         $optionDescription = '';
+        $optionEqualSignCount = 0;
 
         while ($line = fgets($scanImageProcess)) {
             $line = trim($line);
-            $line = str_replace('[=(', ' ', $line);
+            $line = str_replace('[=(', ' ', $line, $optionEqualSignCount);
             $line = str_replace(')]', '', $line);
 
             if (preg_match('/^(--?([\w-]*))\s([^\s]*)\s\[([^]]*)\]/', $line, $hits) === 0) {
@@ -88,6 +89,7 @@ class OptionStore extends AbstractStore
                     trim($optionDescription),
                     $optionDefault,
                     $this->getOptionValue($optionPossibleValues),
+                    $optionEqualSignCount > 0,
                 );
             }
 
@@ -105,6 +107,7 @@ class OptionStore extends AbstractStore
                 $optionDescription,
                 $optionDefault,
                 $this->getOptionValue($optionPossibleValues),
+                $optionEqualSignCount > 0,
             );
         }
 
