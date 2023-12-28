@@ -5,19 +5,14 @@ namespace GibsonOS\Module\Obscura\Model\Scanner;
 
 use DateTimeImmutable;
 use GibsonOS\Core\Attribute\Install\Database\Column;
-use GibsonOS\Core\Attribute\Install\Database\Key;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
 use GibsonOS\Core\Wrapper\ModelWrapper;
 
-#[Table]
+#[Table(engine: 'MEMORY')]
 class Exception extends AbstractModel
 {
-    #[Column(attributes: [Column::ATTRIBUTE_UNSIGNED], autoIncrement: true)]
-    private ?int $id = null;
-
-    #[Column(length: 128)]
-    #[Key]
+    #[Column(length: 128, primary: true)]
     private string $deviceName;
 
     #[Column(type: Column::TYPE_TEXT)]
@@ -31,18 +26,6 @@ class Exception extends AbstractModel
         parent::__construct($modelWrapper);
 
         $this->added = new DateTimeImmutable();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(?int $id): Exception
-    {
-        $this->id = $id;
-
-        return $this;
     }
 
     public function getDeviceName(): string
