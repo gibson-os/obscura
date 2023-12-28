@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Processor;
 
+use GibsonOS\Core\Exception\AbstractException;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\DirService;
+use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
+use GibsonOS\Module\Obscura\Exception\ScanException;
 use GibsonOS\Module\Obscura\Service\PdfService;
 
-class PdfProcessor implements ScanProcessor
+class PdfDuplexProcessor implements ScanProcessor
 {
     public function __construct(
         private readonly DirService $dirService,
@@ -44,12 +47,30 @@ class PdfProcessor implements ScanProcessor
             unlink($tmpPdfFilename);
         }
 
-        $this->pdfService->pdfUnite($pdfFileNames, $filename);
+        $sortedFilenames = [];
+        $reverseFilenames = array_reverse($pdfFileNames);
+
+        foreach ($options['pdfFilenames'] ?? [] as $index => $pdfFilename) {
+            $sortedFilenames[] = $pdfFilename;
+            $sortedFilenames[] = $reverseFilenames[$index];
+        }
+
+        if (count($sortedFilenames) > 0) {
+            $this->pdfService->pdfUnite($sortedFilenames, $filename);
+
+            return;
+        }
+
+        throw (new ScanException('Bitte nun die geraden Seiten von hinten einlegen.'))
+            ->setType(AbstractException::INFO)
+            ->setExtraParameter('deviceName', $deviceName)
+            ->setExtraParameter('options[pdfFilenames]', JsonUtility::encode($pdfFileNames))
+        ;
     }
 
     public function supports(Format $format): bool
     {
-        return $format === Format::PDF;
+        return $format === Format::PDF_DUPLEX;
     }
 
     /**
