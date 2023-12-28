@@ -7,6 +7,7 @@ use GibsonOS\Core\Attribute\GetEnv;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\ProcessService;
 use GibsonOS\Core\Utility\JsonUtility;
+use GibsonOS\Module\Obscura\Dto\Option;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Store\OptionStore;
@@ -34,9 +35,14 @@ class TiffProcessor implements ScanProcessor
         $this->optionStore->setDeviceName($deviceName);
         $scannerOptions = $this->optionStore->getList();
         $arguments = [
-            escapeshellarg(sprintf('-d %s', $deviceName)),
-            escapeshellarg('--format tiff'),
+            escapeshellarg(sprintf('--device-name=%s', $deviceName)),
+            escapeshellarg('--format=tiff'),
         ];
+
+        usort(
+            $scannerOptions,
+            static fn (Option $scannerOptionA, Option $scannerOptionB): int => (int) $scannerOptionA->isGeometry(),
+        );
 
         foreach ($scannerOptions as $scannerOption) {
             $option = $options[$scannerOption->getName()] ?? null;
@@ -55,10 +61,9 @@ class TiffProcessor implements ScanProcessor
             }
 
             $arguments[] = escapeshellarg(sprintf(
-                '%s%s%s',
+                '%s=%s',
                 $scannerOption->getArgument(),
-                $scannerOption->hasEqualSign() ? '=' : ' ',
-                $option,
+                escapeshellarg($option),
             ));
         }
 

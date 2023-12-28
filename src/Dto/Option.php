@@ -13,7 +13,7 @@ class Option
         private readonly string $description,
         private readonly string $default,
         private readonly Value $value,
-        private readonly bool $equalSign,
+        private readonly bool $geometry,
     ) {
     }
 
@@ -42,8 +42,8 @@ class Option
         return $this->value;
     }
 
-    public function hasEqualSign(): bool
+    public function isGeometry(): bool
     {
-        return $this->equalSign;
+        return $this->geometry;
     }
 }
