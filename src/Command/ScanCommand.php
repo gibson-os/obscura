@@ -85,7 +85,7 @@ class ScanCommand extends AbstractCommand
             $this->modelManager->saveWithoutChildren(
                 (new Exception($this->modelWrapper))
                     ->setDeviceName($this->deviceName)
-                    ->setException($exception),
+                    ->setException(serialize($exception)),
             );
 
             throw $exception;

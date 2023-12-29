@@ -109,7 +109,7 @@ class ScannerController extends AbstractController
             try {
                 $exception = $exceptionRepository->getByLastCheck($deviceName, $lastCheckDate);
 
-                throw $exception->getException();
+                throw unserialize($exception->getException());
             } catch (SelectError) {
                 // do nothing
             }

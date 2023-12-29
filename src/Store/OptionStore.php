@@ -69,13 +69,13 @@ class OptionStore extends AbstractStore
         $optionPossibleValues = '';
         $optionDefault = '';
         $optionDescription = '';
-        $isGeometry = false;
+        $optionIsGeometry = false;
 
         while ($line = fgets($scanImageProcess)) {
             $line = trim($line);
             $line = str_replace('[=(', ' ', $line, $equalSignCount);
             $line = str_replace(')]', '', $line);
-            $isGeometry = $isGeometry || mb_strtolower($line) === 'geometry:';
+            $isGeometry = $optionIsGeometry || mb_strtolower($line) === 'geometry:';
 
             if (preg_match('/^(--?([\w-]*))\s([^\s]*)\s\[([^]]*)\]/', $line, $hits) === 0) {
                 $optionDescription .= $line . ' ';
@@ -90,7 +90,7 @@ class OptionStore extends AbstractStore
                     trim($optionDescription),
                     $optionDefault,
                     $this->getOptionValue($optionPossibleValues),
-                    $isGeometry,
+                    $optionIsGeometry,
                 );
             }
 
@@ -99,6 +99,7 @@ class OptionStore extends AbstractStore
             $optionPossibleValues = $hits[3];
             $optionDefault = $hits[4];
             $optionDescription = '';
+            $optionIsGeometry = $isGeometry;
         }
 
         if ($optionArgument !== null) {
@@ -108,7 +109,7 @@ class OptionStore extends AbstractStore
                 $optionDescription,
                 $optionDefault,
                 $this->getOptionValue($optionPossibleValues),
-                $isGeometry,
+                $optionIsGeometry,
             );
         }
 

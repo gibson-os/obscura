@@ -40,14 +40,14 @@ class Exception extends AbstractModel
         return $this;
     }
 
-    public function getException(): \Exception
+    public function getException(): string
     {
-        return unserialize($this->exception);
+        return $this->exception;
     }
 
-    public function setException(\Exception $exception): Exception
+    public function setException(string $exception): Exception
     {
-        $this->exception = serialize($exception);
+        $this->exception = $exception;
 
         return $this;
     }

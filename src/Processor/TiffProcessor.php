@@ -41,7 +41,7 @@ class TiffProcessor implements ScanProcessor
 
         usort(
             $scannerOptions,
-            static fn (Option $scannerOptionA, Option $scannerOptionB): int => (int) $scannerOptionA->isGeometry(),
+            static fn (Option $scannerOptionA, Option $scannerOptionB): int => $scannerOptionA->isGeometry() ? -1 : 1,
         );
 
         foreach ($scannerOptions as $scannerOption) {
@@ -61,9 +61,10 @@ class TiffProcessor implements ScanProcessor
             }
 
             $arguments[] = escapeshellarg(sprintf(
-                '%s=%s',
+                '%s%s%s',
                 $scannerOption->getArgument(),
-                escapeshellarg($option),
+                str_starts_with($scannerOption->getArgument(), '--') ? '=' : ' ',
+                $option,
             ));
         }
 
