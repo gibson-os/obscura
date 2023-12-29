@@ -51,8 +51,14 @@ class PdfService
         $this->processService->execute(sprintf(
             '%s %s %s',
             $this->pdfUnitePath,
-            implode(' ', $pdfFilenames),
-            $filename,
+            implode(
+                ' ',
+                array_map(
+                    static fn (string $pdfFilename): string => escapeshellarg($pdfFilename),
+                    $pdfFilenames,
+                ),
+            ),
+            escapeshellarg($filename),
         ));
     }
 }

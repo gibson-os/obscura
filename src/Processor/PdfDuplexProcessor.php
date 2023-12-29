@@ -7,7 +7,6 @@ use GibsonOS\Core\Exception\AbstractException;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\DirService;
-use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Exception\ScanException;
@@ -42,7 +41,7 @@ class PdfDuplexProcessor implements ScanProcessor
             $tmpOcrPdfFilename = sprintf('%socr.pdf', $tmpPdfFilename);
             $this->pdfService->ocrPdf($tmpPdfFilename, $tmpOcrPdfFilename);
 
-            $pdfFileNames[] = escapeshellarg($tmpOcrPdfFilename);
+            $pdfFileNames[] = $tmpOcrPdfFilename;
             unlink($tmpTiffFilename);
             unlink($tmpPdfFilename);
         }
@@ -61,11 +60,16 @@ class PdfDuplexProcessor implements ScanProcessor
             return;
         }
 
-        throw (new ScanException('Bitte nun die geraden Seiten von hinten einlegen.'))
+        $exception = (new ScanException('Bitte nun die geraden Seiten von hinten einlegen.'))
             ->setType(AbstractException::INFO)
-            ->setExtraParameter('deviceName', $deviceName)
-            ->addButton('OK', 'options[pdfFilenames]', JsonUtility::encode($pdfFileNames))
+            ->setTitle('Gerade Seiten einlegen')
         ;
+
+        foreach ($pdfFileNames as $pdfFileName) {
+            $exception->setExtraParameter('options[pdfFilenames][]', $pdfFileName);
+        }
+
+        throw $exception;
     }
 
     public function supports(Format $format): bool

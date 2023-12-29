@@ -68,8 +68,21 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
                         deviceName: me.params.deviceName,
                         lastCheck: lastCheck
                     },
+                    messageBox: {
+                        buttonHandler(button, response) {
+                            const data = Ext.decode(response.responseText).data;
+
+                            if (data.extraParameters) {
+                                const scanButton = form.down('#buttons').items.findBy((button) => {
+                                    return button.getXType() === 'button' && button.getText() === 'Scannen';
+                                });
+                                scanButton.parameters = Ext.merge(scanButton.parameters, data.extraParameters);
+                                scanButton.handler();
+                            }
+                        }
+                    },
                     method: 'GET',
-                    success: function(response) {
+                    success(response) {
                         const data = Ext.decode(response.responseText).data;
                         lastCheck = data.date;
 
@@ -82,7 +95,7 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
                         me.setLoading(false);
                         lastCheck = null;
                     },
-                    failure() {
+                    failure(response) {
                         me.setLoading(false);
                         lastCheck = null;
                     }

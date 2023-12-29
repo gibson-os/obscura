@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Obscura\Model\Scanner;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use GibsonOS\Core\Attribute\Install\Database\Column;
 use GibsonOS\Core\Attribute\Install\Database\Table;
 use GibsonOS\Core\Model\AbstractModel;
@@ -19,7 +20,7 @@ class Exception extends AbstractModel
     private string $exception;
 
     #[Column]
-    private DateTimeImmutable $added;
+    private DateTimeInterface $added;
 
     public function __construct(ModelWrapper $modelWrapper)
     {
@@ -52,12 +53,12 @@ class Exception extends AbstractModel
         return $this;
     }
 
-    public function getAdded(): DateTimeImmutable
+    public function getAdded(): DateTimeInterface
     {
         return $this->added;
     }
 
-    public function setAdded(DateTimeImmutable $added): Exception
+    public function setAdded(DateTimeInterface $added): Exception
     {
         $this->added = $added;
 

@@ -39,7 +39,7 @@ class PdfProcessor implements ScanProcessor
             $tmpOcrPdfFilename = sprintf('%socr.pdf', $tmpPdfFilename);
             $this->pdfService->ocrPdf($tmpPdfFilename, $tmpOcrPdfFilename);
 
-            $pdfFileNames[] = escapeshellarg($tmpOcrPdfFilename);
+            $pdfFileNames[] = $tmpOcrPdfFilename;
             unlink($tmpTiffFilename);
             unlink($tmpPdfFilename);
         }
