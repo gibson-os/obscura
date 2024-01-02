@@ -160,6 +160,7 @@ class Template extends AbstractModel implements JsonSerializable, AutoCompleteMo
             'path' => $this->getPath(),
             'filename' => $this->getFilename(),
             'multipage' => $this->isMultipage(),
+            'format' => $this->getFormat()->name,
             'options' => $this->getOptions(),
         ];
     }
