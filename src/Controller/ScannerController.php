@@ -130,19 +130,12 @@ class ScannerController extends AbstractController
      */
     public function postTemplate(
         ModelManager $modelManager,
-        #[GetMappedModel(['id' => 'name'], ['name' => ''])]
-        Template $templateById,
         #[GetMappedModel(['name' => 'name', 'vendor' => 'vendor', 'model' => 'model'])]
-        Template $templateByName,
+        Template $template,
         bool $overwrite = false,
     ): AjaxResponse {
-        $template = $templateById->getId() === null
-            ? $templateByName
-            : $templateById
-        ;
-
         if ($template->getId() !== null && $overwrite === false) {
-            $exception = new TemplateException(sprintf('Ex existiert bereits eine Vorlage unter dem Namen "%s"', $template->getName()));
+            $exception = new TemplateException(sprintf('Es existiert bereits eine Vorlage unter dem Namen "%s"', $template->getName()));
             $exception->setType(AbstractException::QUESTION);
             $exception->setExtraParameter('vendor', $template->getVendor());
             $exception->setExtraParameter('model', $template->getModel());

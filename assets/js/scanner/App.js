@@ -32,8 +32,11 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
         };
 
         form.on('afterAddFields', () => {
-            basicForm.findField('name').on('change', (field, value) => {
-                let template = field.findRecordByValue(value);
+            const templateField = basicForm.findField('name');
+
+            templateField.displayAsValue = true;
+            templateField.on('change', (field, value) => {
+                let template = field.findRecord('name', value);
 
                 if (template === false) {
                     return;
