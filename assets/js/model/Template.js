@@ -22,6 +22,9 @@ Ext.define('GibsonOS.module.obscura.model.Template', {
         name: 'multipage',
         type: 'boolean'
     },{
+        name: 'format',
+        type: 'string'
+    },{
         name: 'options',
         type: 'object'
     }]

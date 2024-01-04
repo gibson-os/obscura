@@ -234,16 +234,16 @@
         },
         {
             "name": "gibson-os/core",
-            "version": "v4.4.9",
+            "version": "v4.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gibson-os/core.git",
-                "reference": "bfdbdca8281be3eb730df994533e9abaa7e74a95"
+                "reference": "dc7a8d54252fc59e35382b0c8d6ab3b215834a49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gibson-os/core/zipball/bfdbdca8281be3eb730df994533e9abaa7e74a95",
-                "reference": "bfdbdca8281be3eb730df994533e9abaa7e74a95",
+                "url": "https://api.github.com/repos/gibson-os/core/zipball/dc7a8d54252fc59e35382b0c8d6ab3b215834a49",
+                "reference": "dc7a8d54252fc59e35382b0c8d6ab3b215834a49",
                 "shasum": ""
             },
             "require": {
@@ -292,9 +292,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/gibson-os/core/issues",
-                "source": "https://github.com/gibson-os/core/tree/v4.4.9"
+                "source": "https://github.com/gibson-os/core/tree/v4.4.10"
             },
-            "time": "2023-12-29T10:37:01+00:00"
+            "time": "2024-01-04T11:35:46+00:00"
         },
         {
             "name": "gibson-os/explorer",
@@ -394,16 +394,16 @@
         },
         {
             "name": "google/auth",
-            "version": "v1.33.0",
+            "version": "v1.34.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "682dc6c30bb509953c9e43bb0960d901582da00b"
+                "reference": "155daeadfd2f09743f611ea493b828d382519575"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/682dc6c30bb509953c9e43bb0960d901582da00b",
-                "reference": "682dc6c30bb509953c9e43bb0960d901582da00b",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/155daeadfd2f09743f611ea493b828d382519575",
+                "reference": "155daeadfd2f09743f611ea493b828d382519575",
                 "shasum": ""
             },
             "require": {
@@ -446,9 +446,9 @@
             "support": {
                 "docs": "https://googleapis.github.io/google-auth-library-php/main/",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.33.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.34.0"
             },
-            "time": "2023-11-30T15:49:27+00:00"
+            "time": "2024-01-03T20:45:15+00:00"
         },
         {
             "name": "google/protobuf",
@@ -4024,21 +4024,22 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.45.0",
+            "version": "v3.46.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "c0daa33cb2533cd73f48dde1c70c2afa3e7953b5"
+                "reference": "be6831c9af1740470d2a773119b9273f8ac1c3d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/c0daa33cb2533cd73f48dde1c70c2afa3e7953b5",
-                "reference": "c0daa33cb2533cd73f48dde1c70c2afa3e7953b5",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/be6831c9af1740470d2a773119b9273f8ac1c3d2",
+                "reference": "be6831c9af1740470d2a773119b9273f8ac1c3d2",
                 "shasum": ""
             },
             "require": {
                 "composer/semver": "^3.4",
                 "composer/xdebug-handler": "^3.0.3",
+                "ext-filter": "*",
                 "ext-json": "*",
                 "ext-tokenizer": "*",
                 "php": "^7.4 || ^8.0",
@@ -4102,7 +4103,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.45.0"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.46.0"
             },
             "funding": [
                 {
@@ -4110,7 +4111,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-30T02:07:07+00:00"
+            "time": "2024-01-03T21:38:46+00:00"
         },
         {
             "name": "masterminds/html5",

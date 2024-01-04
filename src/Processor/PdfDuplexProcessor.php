@@ -51,7 +51,11 @@ class PdfDuplexProcessor implements ScanProcessor
 
         foreach ($options['pdfFilenames'] ?? [] as $index => $pdfFilename) {
             $sortedFilenames[] = $pdfFilename;
-            $sortedFilenames[] = $reverseFilenames[$index];
+            $equalFilename = $reverseFilenames[$index] ?? null;
+
+            if ($equalFilename !== null) {
+                $sortedFilenames[] = $equalFilename;
+            }
         }
 
         if (count($sortedFilenames) > 0) {
@@ -65,8 +69,8 @@ class PdfDuplexProcessor implements ScanProcessor
             ->setTitle('Gerade Seiten einlegen')
         ;
 
-        foreach ($pdfFileNames as $pdfFileName) {
-            $exception->setExtraParameter('options[pdfFilenames][]', $pdfFileName);
+        foreach ($pdfFileNames as $index => $pdfFileName) {
+            $exception->setExtraParameter(sprintf('options[pdfFilenames][%d]', $index), $pdfFileName);
         }
 
         throw $exception;

@@ -76,8 +76,10 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
                                 const scanButton = form.down('#buttons').items.findBy((button) => {
                                     return button.getXType() === 'button' && button.getText() === 'Scannen';
                                 });
+                                const oldParameters = scanButton.parameters;
                                 scanButton.parameters = Ext.merge(scanButton.parameters, data.extraParameters);
                                 scanButton.handler();
+                                scanButton.parameters = oldParameters;
                             }
                         }
                     },
