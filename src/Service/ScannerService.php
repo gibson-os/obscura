@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace GibsonOS\Module\Obscura\Service;
 
 use GibsonOS\Core\Attribute\GetServices;
+use GibsonOS\Core\Exception\FileExistsError;
 use GibsonOS\Core\Service\DirService;
+use GibsonOS\Core\Service\FileService;
 use GibsonOS\Core\Service\TwigService;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\ScanException;
@@ -24,6 +26,7 @@ class ScannerService
         private readonly array $scanProcessors,
         private readonly TwigService $twigService,
         private readonly DirService $dirService,
+        private readonly FileService $fileService,
     ) {
         $this->twigService->getTwig()->addExtension(new StringLoaderExtension());
     }
@@ -33,6 +36,7 @@ class ScannerService
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws FileExistsError
      */
     public function scan(
         string $deviceName,
@@ -52,6 +56,10 @@ class ScannerService
         foreach ($this->scanProcessors as $scanProcessor) {
             if (!$scanProcessor->supports($format)) {
                 continue;
+            }
+
+            if ($this->fileService->exists($newFileName)) {
+                throw new FileExistsError(sprintf('%s already exists!', $newFileName));
             }
 
             $scanProcessor->scan($deviceName, $newFileName, $multipage, $options);
