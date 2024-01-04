@@ -41,7 +41,7 @@ class PdfServiceTest extends Unit
 
     public function testOcrPdf(): void
     {
-        $this->processService->execute('ocrMyPdf "arthur.pdf" "dent.pdf" -l deu+eng --image-dpi 300 -c -i')
+        $this->processService->execute('ocrMyPdf "arthur.pdf" "dent.pdf" -l deu+eng --image-dpi 300 --deskew --clean --rotate-pages')
             ->shouldBeCalledOnce()
             ->willReturn('')
         ;

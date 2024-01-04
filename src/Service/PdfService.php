@@ -39,7 +39,7 @@ class PdfService
     public function ocrPdf(string $inputFilename, string $outputFilename): void
     {
         $this->processService->execute(sprintf(
-            '%s %s %s -l deu+eng --image-dpi 300 -c -i',
+            '%s %s %s -l deu+eng --image-dpi 300 --deskew --clean --rotate-pages',
             $this->ocrMyPdfPath,
             escapeshellarg($inputFilename),
             escapeshellarg($outputFilename),
