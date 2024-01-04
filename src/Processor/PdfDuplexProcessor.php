@@ -11,12 +11,13 @@ use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Exception\ScanException;
 use GibsonOS\Module\Obscura\Service\PdfService;
+use GibsonOS\Module\Obscura\Service\ScanService;
 
 class PdfDuplexProcessor implements ScanProcessor
 {
     public function __construct(
         private readonly DirService $dirService,
-        private readonly TiffProcessor $tiffProcessor,
+        private readonly ScanService $scanService,
         private readonly PdfService $pdfService,
     ) {
     }
@@ -92,9 +93,10 @@ class PdfDuplexProcessor implements ScanProcessor
             preg_replace('/\W/', '', $deviceName),
             time(),
         );
-        $this->tiffProcessor->scan(
+        $this->scanService->scan(
             $deviceName,
             sprintf('%s%s.tiff', $this->dirService->addEndSlash(sys_get_temp_dir()), $tmpTiffFilename),
+            'tiff',
             $multipage,
             $options,
         );

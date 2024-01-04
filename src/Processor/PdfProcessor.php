@@ -5,17 +5,22 @@ namespace GibsonOS\Module\Obscura\Processor;
 
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\ProcessError;
+use GibsonOS\Core\Service\DateTimeService;
 use GibsonOS\Core\Service\DirService;
+use GibsonOS\Core\Service\FileService;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Service\PdfService;
+use GibsonOS\Module\Obscura\Service\ScanService;
 
 class PdfProcessor implements ScanProcessor
 {
     public function __construct(
         private readonly DirService $dirService,
-        private readonly TiffProcessor $tiffProcessor,
+        private readonly FileService $fileService,
+        private readonly ScanService $scanService,
         private readonly PdfService $pdfService,
+        private readonly DateTimeService $dateTimeService,
     ) {
     }
 
@@ -40,8 +45,8 @@ class PdfProcessor implements ScanProcessor
             $this->pdfService->ocrPdf($tmpPdfFilename, $tmpOcrPdfFilename);
 
             $pdfFileNames[] = $tmpOcrPdfFilename;
-            unlink($tmpTiffFilename);
-            unlink($tmpPdfFilename);
+            $this->fileService->delete($tmpTiffFilename);
+            $this->fileService->delete($tmpPdfFilename);
         }
 
         $this->pdfService->pdfUnite($pdfFileNames, $filename);
@@ -61,11 +66,12 @@ class PdfProcessor implements ScanProcessor
         $tmpTiffFilename = sprintf(
             'obscura%s%d',
             preg_replace('/\W/', '', $deviceName),
-            time(),
+            $this->dateTimeService->get()->getTimestamp(),
         );
-        $this->tiffProcessor->scan(
+        $this->scanService->scan(
             $deviceName,
             sprintf('%s%s.tiff', $this->dirService->addEndSlash(sys_get_temp_dir()), $tmpTiffFilename),
+            'tiff',
             $multipage,
             $options,
         );

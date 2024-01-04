@@ -5,14 +5,12 @@ namespace GibsonOS\Module\Obscura\Service;
 
 use GibsonOS\Core\Attribute\GetEnv;
 use GibsonOS\Core\Exception\ProcessError;
-use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\ProcessService;
 
 class PdfService
 {
     public function __construct(
         private readonly ProcessService $processService,
-        private readonly DirService $dirService,
         #[GetEnv('TIFF2PDF_PATH')]
         private readonly string $tiff2PdfPath,
         #[GetEnv('OCRMYPDF_PATH')]
@@ -27,7 +25,12 @@ class PdfService
      */
     public function tiff2pdf(string $tiffFilename, string $pdfFilename): void
     {
-        $this->processService->execute(sprintf('%s -o %s %s', $this->tiff2PdfPath, $pdfFilename, $tiffFilename));
+        $this->processService->execute(sprintf(
+            '%s -o %s %s',
+            $this->tiff2PdfPath,
+            escapeshellarg($pdfFilename),
+            escapeshellarg($tiffFilename),
+        ));
     }
 
     /**
@@ -38,8 +41,8 @@ class PdfService
         $this->processService->execute(sprintf(
             '%s %s %s -l deu+eng --image-dpi 300 -c -i',
             $this->ocrMyPdfPath,
-            $inputFilename,
-            $outputFilename,
+            escapeshellarg($inputFilename),
+            escapeshellarg($outputFilename),
         ));
     }
 
