@@ -7,6 +7,7 @@ use GibsonOS\Core\Exception\Repository\SelectError;
 use GibsonOS\Core\Repository\AbstractRepository;
 use GibsonOS\Module\Obscura\Model\Template;
 use JsonException;
+use MDO\Enum\OrderDirection;
 use MDO\Exception\ClientException;
 use MDO\Exception\RecordException;
 use ReflectionException;
@@ -35,6 +36,7 @@ class TemplateRepository extends AbstractRepository
                 'model' => $model,
             ],
             Template::class,
+            orderBy: ['`name`' => OrderDirection::ASC],
         );
     }
 }

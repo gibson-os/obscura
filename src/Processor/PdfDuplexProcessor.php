@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Processor;
 
+use GibsonOS\Core\Enum\HttpStatusCode;
 use GibsonOS\Core\Exception\AbstractException;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\ProcessError;
@@ -65,7 +66,10 @@ class PdfDuplexProcessor implements ScanProcessor
             return;
         }
 
-        $exception = (new ScanException('Bitte nun die geraden Seiten von hinten einlegen.'))
+        $exception = (new ScanException(
+            'Bitte nun die geraden Seiten von hinten einlegen.',
+            HttpStatusCode::ACCEPTED->value,
+        ))
             ->setType(AbstractException::INFO)
             ->setTitle('Gerade Seiten einlegen')
         ;

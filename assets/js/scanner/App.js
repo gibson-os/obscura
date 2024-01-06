@@ -61,52 +61,51 @@ Ext.define('GibsonOS.module.obscura.scanner.App', {
         });
 
         basicForm.on('actioncomplete', () => {
-            me.setLoading(true);
+            setTimeout(function() { me.getStatus() }, 500);
+        });
+    },
+    getStatus(lastCheck = null) {
+        const me = this;
+        let form = me.down('form');
 
-            let lastCheck = null;
-            const reload = function() {
-                GibsonOS.Ajax.request({
-                    url: baseDir + 'obscura/scanner/status',
-                    params: {
-                        deviceName: me.params.deviceName,
-                        lastCheck: lastCheck
-                    },
-                    messageBox: {
-                        buttonHandler(button, response) {
-                            const data = Ext.decode(response.responseText).data;
+        me.setLoading(true);
 
-                            if (data.extraParameters) {
-                                const scanButton = form.down('#buttons').items.findBy((button) => {
-                                    return button.getXType() === 'button' && button.getText() === 'Scannen';
-                                });
-                                const oldParameters = scanButton.parameters;
-                                scanButton.parameters = Ext.merge(scanButton.parameters, data.extraParameters);
-                                scanButton.handler();
-                                scanButton.parameters = oldParameters;
-                            }
-                        }
-                    },
-                    method: 'GET',
-                    success(response) {
-                        const data = Ext.decode(response.responseText).data;
-                        lastCheck = data.date;
+        GibsonOS.Ajax.request({
+            url: baseDir + 'obscura/scanner/status',
+            params: {
+                deviceName: me.params.deviceName,
+                lastCheck: lastCheck
+            },
+            messageBox: {
+                buttonHandler(button, response) {
+                    const data = Ext.decode(response.responseText).data;
 
-                        if (data.locked) {
-                            setTimeout(reload, 500);
-
-                            return;
-                        }
-
-                        me.setLoading(false);
-                        lastCheck = null;
-                    },
-                    failure(response) {
-                        me.setLoading(false);
-                        lastCheck = null;
+                    if (response.status === 202 && data.extraParameters) {
+                        const scanButton = form.down('#buttons').items.findBy((button) => {
+                            return button.getXType() === 'button' && button.getText() === 'Scannen';
+                        });
+                        const oldParameters = scanButton.parameters;
+                        scanButton.parameters = Ext.merge(scanButton.parameters, data.extraParameters);
+                        scanButton.handler();
+                        scanButton.parameters = oldParameters;
                     }
-                });
-            };
-            setTimeout(reload, 500);
+                }
+            },
+            method: 'GET',
+            success(response) {
+                const data = Ext.decode(response.responseText).data;
+
+                if (data.locked) {
+                    setTimeout(function() { me.getStatus(data.date) }, 500);
+
+                    return;
+                }
+
+                me.setLoading(false);
+            },
+            failure() {
+                me.setLoading(false);
+            }
         });
     }
 });
