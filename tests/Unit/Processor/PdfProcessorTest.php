@@ -93,6 +93,9 @@ class PdfProcessorTest extends Unit
         $this->fileService->delete($tiffFilename . '.pdf')
             ->shouldBeCalledOnce()
         ;
+        $this->fileService->delete($tiffFilename . '.pdfocr.pdf')
+            ->shouldBeCalledOnce()
+        ;
 
         $this->pdfProcessor->scan(
             'arthur',
@@ -135,6 +138,9 @@ class PdfProcessorTest extends Unit
         $this->fileService->delete($tiffFilename1 . '.pdf')
             ->shouldBeCalledOnce()
         ;
+        $this->fileService->delete($tiffFilename1 . '.pdfocr.pdf')
+            ->shouldBeCalledOnce()
+        ;
         $this->pdfService->tiff2pdf($tiffFilename2, $tiffFilename2 . '.pdf')
             ->shouldBeCalledOnce()
         ;
@@ -145,6 +151,9 @@ class PdfProcessorTest extends Unit
             ->shouldBeCalledOnce()
         ;
         $this->fileService->delete($tiffFilename2 . '.pdf')
+            ->shouldBeCalledOnce()
+        ;
+        $this->fileService->delete($tiffFilename2 . '.pdfocr.pdf')
             ->shouldBeCalledOnce()
         ;
         $this->pdfService->pdfUnite([$tiffFilename1 . '.pdfocr.pdf', $tiffFilename2 . '.pdfocr.pdf'], 'dent')

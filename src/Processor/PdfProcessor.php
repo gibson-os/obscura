@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Processor;
 
+use GibsonOS\Core\Exception\DeleteError;
+use GibsonOS\Core\Exception\FileNotFound;
 use GibsonOS\Core\Exception\GetError;
 use GibsonOS\Core\Exception\ProcessError;
 use GibsonOS\Core\Service\DateTimeService;
@@ -10,6 +12,8 @@ use GibsonOS\Core\Service\DirService;
 use GibsonOS\Core\Service\FileService;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
+use GibsonOS\Module\Obscura\Exception\PdfException;
+use GibsonOS\Module\Obscura\Exception\ScanException;
 use GibsonOS\Module\Obscura\Service\PdfService;
 use GibsonOS\Module\Obscura\Service\ScanService;
 
@@ -25,9 +29,13 @@ class PdfProcessor implements ScanProcessor
     }
 
     /**
-     * @throws ProcessError
-     * @throws OptionValueException
      * @throws GetError
+     * @throws OptionValueException
+     * @throws ProcessError
+     * @throws DeleteError
+     * @throws FileNotFound
+     * @throws PdfException
+     * @throws ScanException
      */
     public function scan(
         string $deviceName,
@@ -50,6 +58,10 @@ class PdfProcessor implements ScanProcessor
         }
 
         $this->pdfService->pdfUnite($pdfFileNames, $filename);
+
+        foreach ($pdfFileNames as $pdfFileName) {
+            $this->fileService->delete($pdfFileName);
+        }
     }
 
     public function supports(Format $format): bool
@@ -58,8 +70,10 @@ class PdfProcessor implements ScanProcessor
     }
 
     /**
+     * @throws GetError
      * @throws OptionValueException
      * @throws ProcessError
+     * @throws ScanException
      */
     private function scanTiff(string $deviceName, bool $multipage, array $options): string
     {
