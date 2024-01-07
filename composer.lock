@@ -234,16 +234,16 @@
         },
         {
             "name": "gibson-os/core",
-            "version": "v4.4.13",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gibson-os/core.git",
-                "reference": "abeff95f6fc36016240623082339a567f3cc7994"
+                "reference": "54fd5ed9d7a5abdb018391a3d8ea398347713467"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gibson-os/core/zipball/abeff95f6fc36016240623082339a567f3cc7994",
-                "reference": "abeff95f6fc36016240623082339a567f3cc7994",
+                "url": "https://api.github.com/repos/gibson-os/core/zipball/54fd5ed9d7a5abdb018391a3d8ea398347713467",
+                "reference": "54fd5ed9d7a5abdb018391a3d8ea398347713467",
                 "shasum": ""
             },
             "require": {
@@ -292,22 +292,22 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/gibson-os/core/issues",
-                "source": "https://github.com/gibson-os/core/tree/v4.4.13"
+                "source": "https://github.com/gibson-os/core/tree/4.5.0"
             },
-            "time": "2024-01-05T22:18:38+00:00"
+            "time": "2024-01-07T21:29:39+00:00"
         },
         {
             "name": "gibson-os/explorer",
-            "version": "v4.0.3",
+            "version": "v4.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gibson-os/explorer.git",
-                "reference": "30538ae16a58c215f6c88d4f406e9cc57c8cef7a"
+                "reference": "102c3335f6f2b25d906cc17fed1600950317e3b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gibson-os/explorer/zipball/30538ae16a58c215f6c88d4f406e9cc57c8cef7a",
-                "reference": "30538ae16a58c215f6c88d4f406e9cc57c8cef7a",
+                "url": "https://api.github.com/repos/gibson-os/explorer/zipball/102c3335f6f2b25d906cc17fed1600950317e3b4",
+                "reference": "102c3335f6f2b25d906cc17fed1600950317e3b4",
                 "shasum": ""
             },
             "require": {
@@ -341,9 +341,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "support": {
                 "issues": "https://github.com/gibson-os/explorer/issues",
-                "source": "https://github.com/gibson-os/explorer/tree/v4.0.3"
+                "source": "https://github.com/gibson-os/explorer/tree/v4.0.4"
             },
-            "time": "2023-12-26T13:42:04+00:00"
+            "time": "2024-01-07T21:34:17+00:00"
         },
         {
             "name": "gibson-os/mdo",

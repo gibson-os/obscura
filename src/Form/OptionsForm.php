@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace GibsonOS\Module\Obscura\Form;
 
+use GibsonOS\Core\Dto\Form;
 use GibsonOS\Core\Dto\Form\Button;
 use GibsonOS\Core\Dto\Parameter\AbstractParameter;
 use GibsonOS\Core\Dto\Parameter\AutoCompleteParameter;
@@ -111,36 +112,35 @@ class OptionsForm extends AbstractForm
      * @throws OptionValueException
      * @throws ProcessError
      */
-    public function getForm(): array
+    public function getForm(): Form
     {
-        $fields = $this->getFields();
 
-        return [
-            'fields' => $fields,
-            'buttons' => [
-                'scan' => new Button(
-                    'Scannen',
-                    'obscura',
-                    'scanner',
-                    'scan',
-                    ['deviceName' => $this->deviceName],
-                ),
-                'save' => new Button(
-                    'Speichern',
-                    'obscura',
-                    'scanner',
-                    'template',
-                    [
-                        'vendor' => $this->vendor,
-                        'model' => $this->model,
-                    ],
-                ),
-            ],
-        ];
+        return new Form(
+            $this->getFields(),
+            $this->getButtons(),
+        );
     }
 
     public function getButtons(): array
     {
-        return [];
+        return [
+            'scan' => new Button(
+                'Scannen',
+                'obscura',
+                'scanner',
+                'scan',
+                ['deviceName' => $this->deviceName],
+            ),
+            'save' => new Button(
+                'Speichern',
+                'obscura',
+                'scanner',
+                'template',
+                [
+                    'vendor' => $this->vendor,
+                    'model' => $this->model,
+                ],
+            ),
+        ];
     }
 }

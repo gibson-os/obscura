@@ -73,7 +73,7 @@ class OptionStore extends AbstractStore
 
         while ($line = fgets($scanImageProcess)) {
             $line = trim($line);
-            $line = str_replace('[=(', ' ', $line, $equalSignCount);
+            $line = str_replace('[=(', ' ', $line);
             $line = str_replace(')]', '', $line);
             $isGeometry = $optionIsGeometry || mb_strtolower($line) === 'geometry:';
 
