@@ -47,39 +47,10 @@ class ScanService
             escapeshellarg(sprintf('--format=%s', $format)),
         ];
 
-        usort(
-            $scannerOptions,
-            static fn (Option $scannerOptionA, Option $scannerOptionB): int => $scannerOptionA->isGeometry() ? -1 : 1,
-        );
-
-        foreach ($scannerOptions as $scannerOption) {
-            $option = $options[$scannerOption->getName()] ?? $scannerOption->getDefault();
-
-            if (!$scannerOption->getValue()->isValid($option)) {
-                throw new OptionValueException(sprintf(
-                    'Value "%s" for "%s" is invalid! Allowed values: %s',
-                    $option,
-                    $scannerOption->getName(),
-                    JsonUtility::encode($scannerOption->getValue()->getAllowedValues()),
-                ));
-            }
-
-            $arguments[] = escapeshellarg(sprintf(
-                '%s%s%s',
-                $scannerOption->getArgument(),
-                str_starts_with($scannerOption->getArgument(), '--') ? '=' : ' ',
-                $option,
-            ));
-        }
-
-        $fileEnding = $this->fileService->getFileEnding($path);
-        $fileEndingLength = $this->fileService->getFilename($path) === $fileEnding
-            ? null
-            : (-1 - mb_strlen($fileEnding))
-        ;
+        $arguments = array_merge($arguments, $this->getScannerArguments($scannerOptions, $options));
         $argumentPath = $multipage
             ? mb_strpos($path, '%d') === false
-                ? (mb_substr($path, 0, $fileEndingLength) . '_%d' . ($fileEndingLength === null ? '' : ('.' . $fileEnding)))
+                ? $this->addCountParameterToFilename($path)
                 : $path
             : $path
         ;
@@ -123,5 +94,40 @@ class ScanService
         $filenameWithoutEnding = mb_substr($filename, 0, -1 - mb_strlen($fileEnding));
 
         return $filenameWithoutEnding . '_%d.' . $fileEnding;
+    }
+
+    /**
+     * @throws OptionValueException
+     */
+    private function getScannerArguments(array $scannerOptions, array $options): array
+    {
+        $arguments = [];
+
+        usort(
+            $scannerOptions,
+            static fn (Option $scannerOptionA, Option $scannerOptionB): int => $scannerOptionA->isGeometry() ? -1 : 1,
+        );
+
+        foreach ($scannerOptions as $scannerOption) {
+            $option = $options[$scannerOption->getName()] ?? $scannerOption->getDefault();
+
+            if (!$scannerOption->getValue()->isValid($option)) {
+                throw new OptionValueException(sprintf(
+                    'Value "%s" for "%s" is invalid! Allowed values: %s',
+                    $option,
+                    $scannerOption->getName(),
+                    JsonUtility::encode($scannerOption->getValue()->getAllowedValues()),
+                ));
+            }
+
+            $arguments[] = escapeshellarg(sprintf(
+                '%s%s%s',
+                $scannerOption->getArgument(),
+                str_starts_with($scannerOption->getArgument(), '--') ? '=' : ' ',
+                $option,
+            ));
+        }
+
+        return $arguments;
     }
 }

@@ -48,7 +48,7 @@ class ScanServiceTest extends Unit
     /**
      * @dataProvider getScanSinglePageData
      */
-    public function testScanSinglePage(string $path, string $filename, string $fileEnding): void
+    public function testScanSinglePage(string $path): void
     {
         $this->optionStore->setDeviceName('arthur')
             ->shouldBeCalledOnce()
@@ -56,14 +56,6 @@ class ScanServiceTest extends Unit
         $this->optionStore->getList()
             ->shouldBeCalledOnce()
             ->willReturn([])
-        ;
-        $this->fileService->getFileEnding($path)
-            ->shouldBeCalledOnce()
-            ->willReturn($fileEnding)
-        ;
-        $this->fileService->getFilename($path)
-            ->shouldBeCalledOnce()
-            ->willReturn($filename)
         ;
         $this->processService->execute(sprintf('galaxy/marvin "--device-name=arthur" "--format=ford" > "%s"', $path))
             ->shouldBeCalledOnce()
@@ -86,8 +78,8 @@ class ScanServiceTest extends Unit
     public static function getScanSinglePageData(): array
     {
         return [
-            ['arthur/dent', 'dent', 'dent'],
-            ['arthur/dent.mrv', 'dent.mrv', 'mrv'],
+            ['arthur/dent'],
+            ['arthur/dent.mrv'],
         ];
     }
 
@@ -99,14 +91,6 @@ class ScanServiceTest extends Unit
         $this->optionStore->getList()
             ->shouldBeCalledOnce()
             ->willReturn([])
-        ;
-        $this->fileService->getFileEnding('arthur/dent')
-            ->shouldBeCalledOnce()
-            ->willReturn('dent')
-        ;
-        $this->fileService->getFilename('arthur/dent')
-            ->shouldBeCalledOnce()
-            ->willReturn('dent')
         ;
         $this->processService->execute('galaxy/marvin "--device-name=arthur" "--format=ford" > "arthur/dent"')
             ->shouldBeCalledOnce()
@@ -137,10 +121,6 @@ class ScanServiceTest extends Unit
             ->shouldBeCalledOnce()
             ->willReturn([])
         ;
-        $this->fileService->getFileEnding('arthur/dent%d')
-            ->shouldBeCalledOnce()
-            ->willReturn('dent')
-        ;
         $this->processService->execute('galaxy/marvin "--device-name=arthur" "--format=ford" "--batch=arthur/dent%d"')
             ->shouldBeCalledOnce()
             ->willReturn('')
@@ -150,7 +130,7 @@ class ScanServiceTest extends Unit
             ->willReturn('arthur')
         ;
         $this->fileService->getFilename('arthur/dent%d')
-            ->shouldBeCalledTimes(2)
+            ->shouldBeCalledOnce()
             ->willReturn('dent%d')
         ;
         $this->dirService->getFiles('arthur', 'dent*')
@@ -176,10 +156,6 @@ class ScanServiceTest extends Unit
             ->shouldBeCalledOnce()
             ->willReturn([])
         ;
-        $this->fileService->getFileEnding('arthur/dent%d')
-            ->shouldBeCalledOnce()
-            ->willReturn('dent')
-        ;
         $this->processService->execute('galaxy/marvin "--device-name=arthur" "--format=ford" "--batch=arthur/dent%d"')
             ->shouldBeCalledOnce()
             ->willReturn('')
@@ -189,7 +165,7 @@ class ScanServiceTest extends Unit
             ->willReturn('arthur')
         ;
         $this->fileService->getFilename('arthur/dent%d')
-            ->shouldBeCalledTimes(2)
+            ->shouldBeCalledOnce()
             ->willReturn('dent%d')
         ;
         $this->dirService->getFiles('arthur', 'dent*')
@@ -299,14 +275,6 @@ class ScanServiceTest extends Unit
         $this->optionStore->getList()
             ->shouldBeCalledOnce()
             ->willReturn($scannerOptions)
-        ;
-        $this->fileService->getFileEnding('dent')
-            ->shouldBeCalledOnce()
-            ->willReturn('dent')
-        ;
-        $this->fileService->getFileName('dent')
-            ->shouldBeCalledOnce()
-            ->willReturn('dent')
         ;
         $this->processService->execute($command)
             ->shouldBeCalledOnce()
