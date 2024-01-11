@@ -11,48 +11,21 @@ use GibsonOS\Core\Dto\Parameter\BoolParameter;
 use GibsonOS\Core\Dto\Parameter\OptionParameter;
 use GibsonOS\Core\Dto\Parameter\StringParameter;
 use GibsonOS\Core\Exception\ProcessError;
-use GibsonOS\Core\Form\AbstractForm;
 use GibsonOS\Module\Explorer\Dto\Parameter\DirectoryParameter;
 use GibsonOS\Module\Obscura\AutoComplete\TemplateAutoComplete;
+use GibsonOS\Module\Obscura\Config\Form\OptionsFormConfig;
 use GibsonOS\Module\Obscura\Dto\Option\EnumValue;
 use GibsonOS\Module\Obscura\Dto\Option\RangeValue;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Store\OptionStore;
 
-class OptionsForm extends AbstractForm
+class OptionsForm
 {
-    private string $deviceName;
-
-    private string $vendor;
-
-    private string $model;
-
     public function __construct(
         private readonly OptionStore $optionStore,
         private readonly TemplateAutoComplete $templateAutoComplete,
     ) {
-    }
-
-    public function setDeviceName(string $deviceName): OptionsForm
-    {
-        $this->deviceName = $deviceName;
-
-        return $this;
-    }
-
-    public function setVendor(string $vendor): OptionsForm
-    {
-        $this->vendor = $vendor;
-
-        return $this;
-    }
-
-    public function setModel(string $model): OptionsForm
-    {
-        $this->model = $model;
-
-        return $this;
     }
 
     /**
@@ -61,12 +34,12 @@ class OptionsForm extends AbstractForm
      *
      * @return array<string, AbstractParameter>
      */
-    protected function getFields(): array
+    protected function getFields(OptionsFormConfig $config): array
     {
         $fields = [
             'name' => (new AutoCompleteParameter('Vorlage', $this->templateAutoComplete))
-                ->setParameter('vendor', $this->vendor)
-                ->setParameter('model', $this->model),
+                ->setParameter('vendor', $config->getVendor())
+                ->setParameter('model', $config->getModel()),
             'path' => new DirectoryParameter(),
             'filename' => new StringParameter('Dateiname'),
             'multipage' => new BoolParameter('Mehrseitig'),
@@ -82,7 +55,7 @@ class OptionsForm extends AbstractForm
             ))->setValue(Format::PDF->name),
         ];
         $options = $this->optionStore
-            ->setDeviceName($this->deviceName)
+            ->setDeviceName($config->getDeviceName())
             ->getList()
         ;
 
@@ -112,16 +85,16 @@ class OptionsForm extends AbstractForm
      * @throws OptionValueException
      * @throws ProcessError
      */
-    public function getForm(): Form
+    public function getForm(OptionsFormConfig $config): Form
     {
 
         return new Form(
-            $this->getFields(),
-            $this->getButtons(),
+            $this->getFields($config),
+            $this->getButtons($config),
         );
     }
 
-    public function getButtons(): array
+    public function getButtons(OptionsFormConfig $config): array
     {
         return [
             'scan' => new Button(
@@ -129,7 +102,7 @@ class OptionsForm extends AbstractForm
                 'obscura',
                 'scanner',
                 'scan',
-                ['deviceName' => $this->deviceName],
+                ['deviceName' => $config->getDeviceName()],
             ),
             'save' => new Button(
                 'Speichern',
@@ -137,8 +110,8 @@ class OptionsForm extends AbstractForm
                 'scanner',
                 'template',
                 [
-                    'vendor' => $this->vendor,
-                    'model' => $this->model,
+                    'vendor' => $config->getVendor(),
+                    'model' => $config->getModel(),
                 ],
             ),
         ];

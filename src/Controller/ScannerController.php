@@ -19,6 +19,7 @@ use GibsonOS\Core\Service\LockService;
 use GibsonOS\Core\Service\Response\AjaxResponse;
 use GibsonOS\Core\Utility\JsonUtility;
 use GibsonOS\Module\Obscura\Command\ScanCommand;
+use GibsonOS\Module\Obscura\Config\Form\OptionsFormConfig;
 use GibsonOS\Module\Obscura\Enum\Format;
 use GibsonOS\Module\Obscura\Exception\OptionValueException;
 use GibsonOS\Module\Obscura\Exception\TemplateException;
@@ -43,13 +44,9 @@ class ScannerController extends AbstractController
         string $vendor,
         string $model,
     ): AjaxResponse {
-        $optionsForm
-            ->setDeviceName($deviceName)
-            ->setVendor($vendor)
-            ->setModel($model)
-        ;
+        $optionsFormConfig = new OptionsFormConfig($deviceName, $vendor, $model);
 
-        return $this->returnSuccess($optionsForm->getForm());
+        return $this->returnSuccess($optionsForm->getForm($optionsFormConfig));
     }
 
     /**
