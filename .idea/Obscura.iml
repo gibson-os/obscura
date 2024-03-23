@@ -13,13 +13,11 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/captainhook/captainhook" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/captainhook/plugin-composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/captainhook/secrets" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/codeception" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/lib-asserts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/lib-innerbrowser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/lib-web" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/module-asserts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/module-phpbrowser" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/codeception/stub" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dmore/chrome-mink-driver" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel/php-xdg-base-dir" />
@@ -82,7 +80,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/psy/psysh" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/cli-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/code-unit" />
@@ -111,7 +108,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dependency-injection" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/deprecation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/dom-crawler" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/event-dispatcher-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />

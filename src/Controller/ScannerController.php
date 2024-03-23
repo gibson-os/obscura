@@ -95,7 +95,7 @@ class ScannerController extends AbstractController
         LockService $lockService,
         ExceptionRepository $exceptionRepository,
         string $deviceName,
-        string $lastCheck = null,
+        ?string $lastCheck = null,
     ): AjaxResponse {
         $lockName = sprintf('obscura_%s', $deviceName);
         $isLocked = $lockService->isLocked($lockName);
