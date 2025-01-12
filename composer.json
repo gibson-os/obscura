@@ -1,8 +1,8 @@
 {
     "name": "gibson-os/obscura",
     "require": {
-        "php": " ^8.2",
-        "gibson-os/archivist": "^4.0.0"
+        "php": " ^8.4",
+        "gibson-os/archivist": "^5.0.0"
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
@@ -12,9 +12,10 @@
         "captainhook/plugin-composer": "^5.0",
         "php-mock/php-mock-phpunit": "^2.5",
         "vimeo/psalm": "^5.0",
-        "codeception/module-asserts": "^2.0",
+        "codeception/module-asserts": "^3.0",
         "phpspec/prophecy-phpunit": "^2.0",
-        "codeception/module-phpbrowser": "*"
+        "codeception/module-phpbrowser": "*",
+        "rector/rector": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -33,8 +34,8 @@
             "@php:md",
             "@php:unit:run"
         ],
-        "php:cs:fix": "php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose",
-        "php:cs:dry": "php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose --dry-run",
+        "php:cs:fix": "cmd /V /C \"set PHP_CS_FIXER_IGNORE_ENV=1 && php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose\"",
+        "php:cs:dry": "cmd /V /C \"set PHP_CS_FIXER_IGNORE_ENV=1 && php ./vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix src --verbose --dry-run\"",
         "php:psalm": "php ./vendor/vimeo/psalm/psalm",
         "php:md": "php ./vendor/phpmd/phpmd/src/bin/phpmd src text ruleset.xml",
         "php:unit:run": "php ./vendor/codeception/codeception/codecept run Unit --ext DotReporter",
@@ -46,7 +47,8 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "captainhook/plugin-composer": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "tbachert/spi": true
         }
     }
 }
