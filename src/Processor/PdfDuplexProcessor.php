@@ -71,7 +71,7 @@ class PdfDuplexProcessor implements ScanProcessor
             }
         }
 
-        if (count($sortedFilenames) > 0) {
+        if ($sortedFilenames !== []) {
             $this->pdfService->pdfUnite($sortedFilenames, $filename);
 
             foreach ($sortedFilenames as $sortedFilename) {

@@ -78,7 +78,7 @@ class ScanService
             str_replace('%d', '*', $this->fileService->getFilename($argumentPath)),
         );
 
-        if (count($files) === 0) {
+        if ($files === []) {
             throw new ScanException('No documents scanned!');
         }
     }
